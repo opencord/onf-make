@@ -12,6 +12,7 @@ help ::
 include $(ONF_MAKE)/lint/groovy.mk
 include $(ONF_MAKE)/lint/jjb.mk
 include $(ONF_MAKE)/lint/json.mk
+include $(ONF_MAKE)/lint/license/include.mk
 include $(ONF_MAKE)/lint/makefile.mk
 include $(ONF_MAKE)/lint/python.mk
 include $(ONF_MAKE)/lint/shell.mk

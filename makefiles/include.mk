@@ -26,8 +26,6 @@ MAKEDIR       ?= $(TOP)/makefiles
 ONF_ROOT      ?= $(TOP)/../onf-make/makefiles
 ONF_MAKEDIR   := $(ONF_ROOT)/makefiles
 
-
-
 ONF_MAKE ?= $(MAKEDIR)# fix this -- two distinct makefiles/ directories are needed
 ONF_MAKE ?= $(error ONF_MAKE= is required)
 

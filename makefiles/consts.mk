@@ -17,6 +17,7 @@
 # SPDX-FileCopyrightText: 2022-2023 Open Networking Foundation (ONF) and the ONF Contributors
 # SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
+# https://gerrit.opencord.org/plugins/gitiles/onf-make
 # ONF.makefile.version = 1.0
 # -----------------------------------------------------------------------
 
@@ -26,8 +27,8 @@ $(if $(DEBUG),$(warning ENTER))
 export dot          :=.
 export null         :=#
 export space        := $(null) $(null)
-export quote-single := $(null)"$(null)#"
-export quote-double := $(null)'$(null)#'
+export quote-single := $(null)'$(null)#'
+export quote-double := $(null)"$(null)#"
 
 # [DEBUG] make {target} HIDE=
 HIDE        ?= @
