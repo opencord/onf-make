@@ -18,19 +18,23 @@
 # SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
 
+ifndef mk-include--onf-make
+
 $(if $(DEBUG),$(warning ENTER))
 
 TOP           ?= .
 MAKEDIR       ?= $(TOP)/makefiles
 
 ONF_ROOT      ?= $(TOP)/../onf-make/makefiles
-ONF_MAKEDIR   := $(ONF_ROOT)/makefiles
+ONF_MAKEDIR   ?= $(ONF_ROOT)/makefiles
 
 ONF_MAKE ?= $(MAKEDIR)# fix this -- two distinct makefiles/ directories are needed
 ONF_MAKE ?= $(error ONF_MAKE= is required)
 
 include $(ONF_MAKE)/consts.mk
-include $(ONF_MAKE)/help/include.mk
+include $(ONF_MAKE)/help/include.mk       # render target help
+include $(ONF_MAKE)/utils/include.mk      # dependency-less helper macros
+include $(ONF_MAKE)/etc/include.mk        # banner macros
 
 include $(ONF_MAKE)/virtualenv.mk#        # lint-{jjb,python} depends on venv
 include $(ONF_MAKE)/lint/include.mk
@@ -39,6 +43,11 @@ include $(ONF_MAKE)/lint/include.mk
 
 include $(ONF_MAKE)/todo.mk
 include $(ONF_MAKE)/help/variables.mk
+
+##---------------------##
+##---]  ON_DEMAND  [---##
+##---------------------##
+$(if $(USE_DOCKER_MK),$(eval $(ONF_MAKE)/docker/include.mk))
 
 ##-------------------##
 ##---]  TARGETS  [---##
@@ -57,5 +66,9 @@ $(if $(DEBUG),$(warning LEAVE))
 ##     include makefiles/main/enter.mk
 ##     [... include *.mk ...]
 ##     include makefiles/main/leave.mk
+
+mk-include--onf-make := true
+
+endif # mk-include--onf-make
 
 # [EOF]

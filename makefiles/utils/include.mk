@@ -1,6 +1,6 @@
 # -*- makefile -*-
 # -----------------------------------------------------------------------
-# Copyright 2023 Open Networking Foundation (ONF) and the ONF Contributors
+# Copyright 2022-2023 Open Networking Foundation (ONF) and the ONF Contributors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,21 +13,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# SPDX-FileCopyrightText: 2022 Open Networking Foundation (ONF) and the ONF Contributors
+# SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
 
-##--------------------------------##
-##---]  Disable lint targets  [---##
-##--------------------------------##
-NO-LINT-GROOVY  := true#               # Note[1]
-# NO-LINT-JJB    := false
-# NO-LINT-JSON    := true#               # Note[1]
-# NO-LINT-MAKE   := false
-NO-LINT-PYTHON  := true#               # Note[1]
-NO-LINT-SHELL   := true#               # Note[1]
-NO-LINT-YAML    := true#               # Note[1]
+$(if $(DEBUG),$(warning ENTER))
 
-# Note[1] - Plenty of source to cleanup
+# usage: $(call if-not,false,5)
+if-not = $(info 1=$(1), 2=$(2), 3=$(3))\
+  $(if $(1),$(null),$(2))
 
-# USE_DOCKER_MK    := true
+$(if $(DEBUG),$(warning LEAVE))
 
 # [EOF]

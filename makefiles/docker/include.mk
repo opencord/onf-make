@@ -26,7 +26,13 @@ docker-iam     ?= --user $$(id -u):$$(id -g)#          # override for local use
 docker-run     = docker run --rm $(docker-iam)#        # Docker command stem
 docker-run-is  = $(docker-run) $(is-stdin)             # Attach streams when interactive
 docker-run-app = $(docker-run-is) -v ${CURDIR}:/app#   # w/filesystem mount
-is-stdin       = $(shell test -t 0 && echo "-it")
+
+# -----------------------------------------------------------------------
+# --interactive: Attach streams when stdout (fh==0) defined
+# --tty        : Always create a pseudo-tty else jenkins:docker is silent
+# -----------------------------------------------------------------------
+is-stdin       = $(shell test -t 0 && { echo '--interactive'; })
+is-stdin       += --tty
 
 voltha-protos-v5 ?= /go/src/github.com/opencord/voltha-protos/v5
 
