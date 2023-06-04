@@ -15,7 +15,6 @@
 # limitations under the License.
 # -----------------------------------------------------------------------
 
-# Makefile for testing JJB jobs in a virtualenv
 .PHONY: help clean help test
 .DEFAULT_GOAL := help
 
@@ -25,6 +24,9 @@
 TOP          ?= .
 MAKEDIR      ?= $(TOP)/makefiles
 
+# ONF_MAKEDIR   ?= $(HOME)/repo/onf-make/makefiles
+# include $(ONF_MAKEDIR)/include.mk
+
 ##--------------------##
 ##---]  INCLUDES  [---##
 ##--------------------##
@@ -32,6 +34,6 @@ include config.mk#                # configure
 include $(MAKEDIR)/include.mk     # top level include
 
 ## Display make help text late
-include $(ONF_MAKE)/help/trailer.mk
+include $(ONF_MAKEDIR)/help/trailer.mk
 
 # [EOF]

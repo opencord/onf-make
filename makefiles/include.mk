@@ -14,48 +14,50 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# SPDX-FileCopyrightText: 2022 Open Networking Foundation (ONF) and the ONF Contributors
+# SPDX-FileCopyrightText: 2022-2023 Open Networking Foundation (ONF) and the ONF Contributors
 # SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
+# https://gerrit.opencord.org/plugins/gitiles/onf-make
+# ONF.makefile.version = 1.0
+# -----------------------------------------------------------------------
 
-ifndef mk-include--onf-make
+ifndef mk-include--onf-make # single-include guard macor
 
 $(if $(DEBUG),$(warning ENTER))
 
-TOP           ?= .
-MAKEDIR       ?= $(TOP)/makefiles
+## -----------------------------------------------------------------------
+## Define vars based on relative import (normalize symlinks)
+## Usage: include makefiles/onf/include.mk
+## -----------------------------------------------------------------------
+onf-mk-abs    ?= $(abspath $(lastword $(MAKEFILE_LIST)))
+onf-mk-top    := $(subst /include.mk,$(null),$(onf-mk-abs))
+ONF_MAKEDIR   := $(onf-mk-top)
 
-ONF_ROOT      ?= $(TOP)/../onf-make/makefiles
-ONF_MAKEDIR   ?= $(ONF_ROOT)/makefiles
+include $(ONF_MAKEDIR)/consts.mk
+include $(ONF_MAKEDIR)/help/include.mk       # render target help
+include $(ONF_MAKEDIR)/utils/include.mk      # dependency-less helper macros
+include $(ONF_MAKEDIR)/etc/include.mk        # banner macros
 
-ONF_MAKE ?= $(MAKEDIR)# fix this -- two distinct makefiles/ directories are needed
-ONF_MAKE ?= $(error ONF_MAKE= is required)
+include $(ONF_MAKEDIR)/virtualenv.mk#        # lint-{jjb,python} depends on venv
+include $(ONF_MAKEDIR)/lint/include.mk
+# include $(ONF_MAKEDIR)/git-submodules.mk
+# include $(ONF_MAKEDIR)/gerrit/include.mk
 
-include $(ONF_MAKE)/consts.mk
-include $(ONF_MAKE)/help/include.mk       # render target help
-include $(ONF_MAKE)/utils/include.mk      # dependency-less helper macros
-include $(ONF_MAKE)/etc/include.mk        # banner macros
-
-include $(ONF_MAKE)/virtualenv.mk#        # lint-{jjb,python} depends on venv
-include $(ONF_MAKE)/lint/include.mk
-# include $(ONF_MAKE)/git-submodules.mk
-# include $(ONF_MAKE)/gerrit/include.mk
-
-include $(ONF_MAKE)/todo.mk
-include $(ONF_MAKE)/help/variables.mk
+include $(ONF_MAKEDIR)/todo.mk
+include $(ONF_MAKEDIR)/help/variables.mk
 
 ##---------------------##
 ##---]  ON_DEMAND  [---##
 ##---------------------##
-$(if $(USE_DOCKER_MK),$(eval $(ONF_MAKE)/docker/include.mk))
+$(if $(USE_DOCKER_MK),$(eval $(ONF_MAKEDIR)/docker/include.mk))
 
 ##-------------------##
 ##---]  TARGETS  [---##
 ##-------------------##
-include $(ONF_MAKE)/targets/clean.mk
-# include $(ONF_MAKE)/targets/check.mk
-include $(ONF_MAKE)/targets/sterile.mk
-# include $(ONF_MAKE)/targets/test.mk
+include $(ONF_MAKEDIR)/targets/clean.mk
+# include $(ONF_MAKEDIR)/targets/check.mk
+include $(ONF_MAKEDIR)/targets/sterile.mk
+# include $(ONF_MAKEDIR)/targets/test.mk
 
 $(if $(DEBUG),$(warning LEAVE))
 
