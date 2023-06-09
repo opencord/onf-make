@@ -38,6 +38,8 @@ include $(ONF_MAKEDIR)/help/include.mk       # render target help
 include $(ONF_MAKEDIR)/utils/include.mk      # dependency-less helper macros
 include $(ONF_MAKEDIR)/etc/include.mk        # banner macros
 
+include $(ONF_MAKEDIR)/etc/commands.mk       # Tools and local installers
+
 include $(ONF_MAKEDIR)/virtualenv.mk#        # lint-{jjb,python} depends on venv
 include $(ONF_MAKEDIR)/lint/include.mk
 # include $(ONF_MAKEDIR)/git-submodules.mk
