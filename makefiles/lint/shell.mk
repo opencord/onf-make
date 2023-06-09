@@ -34,7 +34,7 @@ shell-check-find += -type f -print0
 shell-check      := shellcheck
 
 shell-check-args += --check-sourced
-shell-check-args += --extenal-sources
+shell-check-args += --external-sources
 
 ##-------------------##
 ##---]  TARGETS  [---##
