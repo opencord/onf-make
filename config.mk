@@ -22,9 +22,6 @@
 # --repo-name-- :=
 --repo-name-- ?= $(error --repo-name--= is required)
 
-# --repo-name-- :=
---repo-name-- ?= $(error --repo-name--= is required)
-
 ##--------------------------------##
 ##---]  Disable lint targets  [---##
 ##--------------------------------##
@@ -114,5 +111,13 @@ ifndef USE-ONF-JJB
 endif
 
 onf-excl-dirs := $(sort $(strip $(onf-excl-dirs)))
+
+##----------------------##
+##---]  Debug Mode  [---##
+##----------------------##
+# export DEBUG           := 1      # makefile debug
+# export DISTUTILS_DEBUG := 1      # verbose: pip
+# export DOCKER_DEBUG    := 1      # verbose: docker
+# export VERBOSE         := 1      # makefile debug
 
 # [EOF]
