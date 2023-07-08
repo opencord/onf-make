@@ -1,6 +1,6 @@
 # -*- makefile -*-
 # -----------------------------------------------------------------------
-# Copyright 2022-2023 Open Networking Foundation (ONF) and the ONF Contributors
+# Copyright 2017-2023 Open Networking Foundation (ONF) and the ONF Contributors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,67 +12,53 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
-# limitations under the License.
-#
-# SPDX-FileCopyrightText: 2022-2023 Open Networking Foundation (ONF) and the ONF Contributors
-# SPDX-License-Identifier: Apache-2.0
+# limitations under the License.d
 # -----------------------------------------------------------------------
-# https://gerrit.opencord.org/plugins/gitiles/onf-make
-# ONF.makefile.version = 1.0
-# -----------------------------------------------------------------------
-
-ifndef mk-include--onf-make # single-include guard macor
 
 $(if $(DEBUG),$(warning ENTER))
 
-## -----------------------------------------------------------------------
-## Define vars based on relative import (normalize symlinks)
-## Usage: include makefiles/onf/include.mk
-## -----------------------------------------------------------------------
-onf-mk-abs    ?= $(abspath $(lastword $(MAKEFILE_LIST)))
-onf-mk-top    := $(subst /include.mk,$(null),$(onf-mk-abs))
-ONF_MAKEDIR   := $(onf-mk-top)
+VOLTHA_TOOLS_VERSION ?= 2.4.0
 
-include $(ONF_MAKEDIR)/consts.mk
-include $(ONF_MAKEDIR)/help/include.mk       # render target help
-include $(ONF_MAKEDIR)/utils/include.mk      # dependency-less helper macros
-include $(ONF_MAKEDIR)/etc/include.mk        # banner macros
+# ---------------------------
+# Macros: command refactoring
+# ---------------------------
+docker-iam     ?= --user $$(id -u):$$(id -g)#          # override for local use
+docker-run     = docker run --rm $(docker-iam)#        # Docker command stem
+docker-run-is  = $(docker-run) $(is-stdin)             # Attach streams when interactive
+docker-run-app = $(docker-run-is) -v ${CURDIR}:/app#   # w/filesystem mount
+is-stdin       = $(shell test -t 0 && echo "-it")
 
-include $(ONF_MAKEDIR)/etc/commands.mk       # Tools and local installers
+voltha-protos-v5 ?= /go/src/github.com/opencord/voltha-protos/v5
 
-include $(ONF_MAKEDIR)/virtualenv.mk#        # lint-{jjb,python} depends on venv
-include $(ONF_MAKEDIR)/lint/include.mk
-# include $(ONF_MAKEDIR)/git-submodules.mk
-# include $(ONF_MAKEDIR)/gerrit/include.mk
+# Docker volume mounts: container:/app/release <=> localhost:{pwd}/release
+vee-golang     = -v gocache-${VOLTHA_TOOLS_VERSION}:/go/pkg
+vee-citools    = voltha/voltha-ci-tools:${VOLTHA_TOOLS_VERSION}
 
-include $(ONF_MAKEDIR)/todo.mk
-include $(ONF_MAKEDIR)/help/variables.mk
+# ---------------
+# Tool Containers
+# ---------------
+docker-go-stem = $(docker-run-app) -v gocache:/.cache $(vee-golang) $(vee-citools)-golang
 
-##---------------------##
-##---]  ON_DEMAND  [---##
-##---------------------##
-$(if $(USE_DOCKER_MK),$(eval $(ONF_MAKEDIR)/docker/include.mk))
+# Usage: GO := $(call get-docker-go,./my.env.temp)
+get-docker-go = $(docker-go-stem) go
+GO            ?= $(call get-docker-go)
 
-##-------------------##
-##---]  TARGETS  [---##
-##-------------------##
-include $(ONF_MAKEDIR)/targets/clean.mk
-# include $(ONF_MAKEDIR)/targets/check.mk
-include $(ONF_MAKEDIR)/targets/sterile.mk
-# include $(ONF_MAKEDIR)/targets/test.mk
+# Usage: GO_SH := $(call get-docker-go-sh,./my.env.temp)
+get-docker-go-sh = $(docker-go-stem) $(if $(1),--env-file $(1)) sh -c
+GO_SH            ?= $(call get-docker-go-sh,./my.env.temp)
+
+# Usage: PROTOC := $(call get-docker-protoc)
+get-docker-protoc = $(docker-run-app) $(vee-citools)-protoc protoc
+PROTOC            ?= $(call get-docker-protoc)
+
+# get-docker-protoc-sh = $(strip )
+PROTOC_SH = $(docker-run-is)
+ifdef voltha-protos-v5
+   PROTOC_SH += -v ${CURDIR}:$(voltha-protos-v5)
+   PROTOC_SH += --workdir=$(voltha-protos-v5)
+endif
+PROTOC_SH += $(vee-citools)-protoc sh -c
 
 $(if $(DEBUG),$(warning LEAVE))
-
-## --------------------------------------------------------------------------
-## structure to support pre/post target handling w/o inlining in Makefile (?)
-## --------------------------------------------------------------------------
-##   include makefiles/include.mk
-##     include makefiles/main/enter.mk
-##     [... include *.mk ...]
-##     include makefiles/main/leave.mk
-
-mk-include--onf-make := true
-
-endif # mk-include--onf-make
 
 # [EOF]

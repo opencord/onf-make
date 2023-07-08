@@ -21,17 +21,12 @@
 ##-------------------##
 ##---]  GLOBALS  [---##
 ##-------------------##
-TOP          ?= .
-MAKEDIR      ?= $(TOP)/makefiles
-
-# ONF_MAKEDIR   ?= $(HOME)/repo/onf-make/makefiles
-# include $(ONF_MAKEDIR)/include.mk
 
 ##--------------------##
 ##---]  INCLUDES  [---##
 ##--------------------##
 include config.mk#                # configure
-include $(MAKEDIR)/include.mk     # top level include
+include makefiles/include.mk      # top level include
 
 ## Display make help text late
 include $(ONF_MAKEDIR)/help/trailer.mk

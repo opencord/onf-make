@@ -18,21 +18,14 @@
 ##--------------------------------##
 ##---]  Disable lint targets  [---##
 ##--------------------------------##
-# NO-LINT-GROOVY    := true#               # Note[1]
-# NO-LINT-JJB       := true#               # Note[2]
-# NO-LINT-JSON      := true#               # Note[1]
-# NO-LINT-MAKEFILE  := true
-# NO-LINT-PYTHON    := true#               # Note[1]
-# NO-LINT-REUSE     := true                # License check
-# NO-LINT-SHELL     := true#               # Note[1]
-# NO-LINT-YAML      := true#               # Note[1]
+NO-LINT-GROOVY  := true#               # Note[1]
+# NO-LINT-JJB    := false
+# NO-LINT-JSON    := true#               # Note[1]
+# NO-LINT-MAKE   := false
+NO-LINT-PYTHON  := true#               # Note[1]
+NO-LINT-SHELL   := true#               # Note[1]
+NO-LINT-YAML    := true#               # Note[1]
 
 # Note[1] - Plenty of source to cleanup
-# Note[2] - No sources available
-
-##---------------------------------##
-##---] Conditional make logic  [---##
-##---------------------------------##
-# USE_DOCKER_MK    := true
 
 # [EOF]
