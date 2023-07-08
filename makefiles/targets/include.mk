@@ -18,32 +18,18 @@
 # SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
 # https://gerrit.opencord.org/plugins/gitiles/onf-make
-# ONF.makefile.version = 1.1
+# ONF.makefile.version = 1.0
 # -----------------------------------------------------------------------
 
 $(if $(DEBUG),$(warning ENTER))
 
-help ::
-	@echo
-	@echo "[LINT]"
-
-## Disable python linting in bulk ?
-ifdef NO-LINT-PYTHON
-  NO-LINT-FLAKE8 := true
-  NO-LINT-PYLINT := true
-endif
-
-include $(ONF_MAKEDIR)/lint/groovy.mk
-include $(ONF_MAKEDIR)/lint/jjb.mk
-include $(ONF_MAKEDIR)/lint/json.mk
-include $(ONF_MAKEDIR)/lint/license/include.mk
-include $(ONF_MAKEDIR)/lint/makefile.mk
-include $(ONF_MAKEDIR)/lint/python/include.mk
-include $(ONF_MAKEDIR)/lint/shell.mk
-include $(ONF_MAKEDIR)/lint/tox/include.mk
-nclude $(ONF_MAKEDIR)/lint/yaml.mk
-
-include $(ONF_MAKEDIR)/lint/help.mk
+##-------------------##
+##---]  TARGETS  [---##
+##-------------------##
+include $(ONF_MAKEDIR)/targets/clean.mk
+include $(ONF_MAKEDIR)/targets/check.mk
+include $(ONF_MAKEDIR)/targets/sterile.mk
+include $(ONF_MAKEDIR)/targets/test/include.mk
 
 $(if $(DEBUG),$(warning LEAVE))
 

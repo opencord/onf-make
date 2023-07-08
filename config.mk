@@ -22,6 +22,9 @@
 # --repo-name-- :=
 --repo-name-- ?= $(error --repo-name--= is required)
 
+# --repo-name-- :=
+--repo-name-- ?= $(error --repo-name--= is required)
+
 ##--------------------------------##
 ##---]  Disable lint targets  [---##
 ##--------------------------------##
@@ -32,7 +35,7 @@
 # NO-LINT-JSON      := true#               # Note[1]
 # NO-LINT-MAKEFILE  := true#               # Note[1]
 # NO-LINT-REUSE     := true                # License check
-# NO-LINT-ROBOT     := true
+# NO-LINT-ROBOT     := true  **
 # NO-LINT-SHELL     := true#               # Note[1]
 # NO-LINT-YAML      := true#               # Note[1]
 

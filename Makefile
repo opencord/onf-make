@@ -1,6 +1,6 @@
 # -*- makefile -*-
 # -----------------------------------------------------------------------
-# Copyright 2023 Open Networking Foundation (ONF) and the ONF Contributors
+# Copyright 2022-2023 Open Networking Foundation (ONF) and the ONF Contributors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@
 ##--------------------##
 include config.mk#                # configure
 include makefiles/include.mk      # top level include
+include makefiles/include.mk      # load library makefiles
 
 ## Display make help text late
 include $(ONF_MAKEDIR)/help/trailer.mk

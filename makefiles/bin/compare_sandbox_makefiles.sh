@@ -36,9 +36,7 @@ function error
 ##----------------##
 ##---]  MAIN  [---##
 ##----------------##
-# src="$HOME/projects/sandbox/onf-make/makefiles"
-# src="$HOME/projects/sandbox/ci-management/makefiles"
-src="$HOME/projects/sandbox/onf-make-all/20230709/makefiles"
+src="$HOME/projects/sandbox/onf-make/makefiles"
 
 dst="$(realpath .)"
 
@@ -74,4 +72,3 @@ while [ $# -gt 0 ]; do
 done
 
 # [EOF]
-
