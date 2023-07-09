@@ -22,7 +22,8 @@ $(if $(DEBUG),$(warning ENTER))
 
 todo ::
 	@echo '[TODO]'
-	@echo '  o volthaStackDeploy.groovy - post v2.11 release cleanup for 2.8'
+	@echo '  o item 1'
+	@echo '  o item 2'
 
 ## -----------------------------------------------------------------------
 ## -----------------------------------------------------------------------

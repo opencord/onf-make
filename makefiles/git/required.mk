@@ -13,25 +13,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-# SPDX-FileCopyrightText: 2022-2023 Open Networking Foundation (ONF) and the ONF Contributors
-# SPDX-License-Identifier: Apache-2.0
+# -----------------------------------------------------------------------
+# Intent: Conditionally load when named targets are requested.
+#   var ?= $(error ...) definitions are fatal to "make help" and others
 # -----------------------------------------------------------------------
 
-.PHONY: test-python
-# test :: test-python
-test-targets += test-python
+git-mk-targets := $(NULL)
+git-mk-targets := show-submodules
 
-## -----------------------------------------------------------------------
-## Intent: Gather and invoke available unit tests
-## -----------------------------------------------------------------------
-test-python-args += -m unittest
-test-python:
-	$(PYTHON) $(test-python-args) discover -v
-
-## -----------------------------------------------------------------------
-## -----------------------------------------------------------------------
-help::
-	@echo "  test-python                   Invoke python unit tests"
+# -----------------------------------------------------------------------
+# Define a flag to only load release targets when mentioned by name
+# Makefile can also explicitly define the flag to force always loading.
+# -----------------------------------------------------------------------
+$(foreach tgt,$(git-mk-targets),\
+  $(if $(findstring $(tgt),$(MAKECMDGOALS)),$(eval USE-ONF-GIT-MK := true))\
+)
 
 # [EOF]

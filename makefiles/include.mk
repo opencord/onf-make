@@ -12,53 +12,63 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
-# limitations under the License.d
+# limitations under the License.
 # -----------------------------------------------------------------------
+# SPDX-FileCopyrightText: 2017-2023 Open Networking Foundation (ONF) and the ONF Contributors
+# SPDX-License-Identifier: Apache-2.0
+# -----------------------------------------------------------------------
+# https://gerrit.opencord.org/plugins/gitiles/onf-make
+# ONF.makefiles.include.version = 1.1
+# -----------------------------------------------------------------------
+
+ifndef mk-include--onf-make # single-include guard macro
 
 $(if $(DEBUG),$(warning ENTER))
 
-VOLTHA_TOOLS_VERSION ?= 2.4.0
+## -----------------------------------------------------------------------
+## Define vars based on relative import (normalize symlinks)
+## Usage: include makefiles/onf/include.mk
+## -----------------------------------------------------------------------
+onf-mk-abs    ?= $(abspath $(lastword $(MAKEFILE_LIST)))
+onf-mk-top    := $(subst /include.mk,$(null),$(onf-mk-abs))
+ONF_MAKEDIR   := $(onf-mk-top)
 
-# ---------------------------
-# Macros: command refactoring
-# ---------------------------
-docker-iam     ?= --user $$(id -u):$$(id -g)#          # override for local use
-docker-run     = docker run --rm $(docker-iam)#        # Docker command stem
-docker-run-is  = $(docker-run) $(is-stdin)             # Attach streams when interactive
-docker-run-app = $(docker-run-is) -v ${CURDIR}:/app#   # w/filesystem mount
-is-stdin       = $(shell test -t 0 && echo "-it")
+TOP ?= $(patsubst %/makefiles/include.mk,%,$(onf-mk-abs))
 
-voltha-protos-v5 ?= /go/src/github.com/opencord/voltha-protos/v5
+include $(ONF_MAKEDIR)/consts.mk
+include $(ONF_MAKEDIR)/help/include.mk       # render target help
+include $(ONF_MAKEDIR)/utils/include.mk      # dependency-less helper macros
+include $(ONF_MAKEDIR)/etc/include.mk        # banner macros
+include $(ONF_MAKEDIR)/commands/include.mk   # Tools and local installers
 
-# Docker volume mounts: container:/app/release <=> localhost:{pwd}/release
-vee-golang     = -v gocache-${VOLTHA_TOOLS_VERSION}:/go/pkg
-vee-citools    = voltha/voltha-ci-tools:${VOLTHA_TOOLS_VERSION}
+include $(ONF_MAKEDIR)/virtualenv.mk#        # lint-{jjb,python} depends on venv
+include $(ONF_MAKEDIR)/lint/include.mk
 
-# ---------------
-# Tool Containers
-# ---------------
-docker-go-stem = $(docker-run-app) -v gocache:/.cache $(vee-golang) $(vee-citools)-golang
+include $(ONF_MAKEDIR)/gerrit/include.mk
+include $(ONF_MAKEDIR)/git/include.mk
+include $(ONF_MAKEDIR)/jjb/include.mk
 
-# Usage: GO := $(call get-docker-go,./my.env.temp)
-get-docker-go = $(docker-go-stem) go
-GO            ?= $(call get-docker-go)
+$(if $(USE-VOLTHA-RELEASE-MK),\
+  $(eval include $(ONF_MAKEDIR)/release/include.mk))
 
-# Usage: GO_SH := $(call get-docker-go-sh,./my.env.temp)
-get-docker-go-sh = $(docker-go-stem) $(if $(1),--env-file $(1)) sh -c
-GO_SH            ?= $(call get-docker-go-sh,./my.env.temp)
+include $(ONF_MAKEDIR)/todo.mk
+include $(ONF_MAKEDIR)/help/variables.mk
 
-# Usage: PROTOC := $(call get-docker-protoc)
-get-docker-protoc = $(docker-run-app) $(vee-citools)-protoc protoc
-PROTOC            ?= $(call get-docker-protoc)
+##---------------------##
+##---]  ON_DEMAND  [---##
+##---------------------##
+$(if $(USE-ONF-GERRIT-MK),$(eval include $(ONF_MAKEDIR)/gerrit/include.mk))
+$(if $(USE-ONF-DOCKER-MK),$(eval include $(ONF_MAKEDIR)/docker/include.mk))
 
-# get-docker-protoc-sh = $(strip )
-PROTOC_SH = $(docker-run-is)
-ifdef voltha-protos-v5
-   PROTOC_SH += -v ${CURDIR}:$(voltha-protos-v5)
-   PROTOC_SH += --workdir=$(voltha-protos-v5)
-endif
-PROTOC_SH += $(vee-citools)-protoc sh -c
+##-------------------##
+##---]  TARGETS  [---##
+##-------------------##
+include $(ONF_MAKEDIR)/targets/include.mk # clean, sterile
 
 $(if $(DEBUG),$(warning LEAVE))
+
+mk-include--onf-make := true
+
+endif # mk-include--onf-make
 
 # [EOF]

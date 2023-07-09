@@ -30,11 +30,11 @@ shell-check-find += -name 'vendor' -prune
 shell-check-find += -o \( -name '*.sh' \)
 shell-check-find += -type f -print0
 
-# shell-check    := $(env-clean) pylint
-shell-check      := shellcheck
+shell-check    := $(env-clean) shellcheck
+# shell-check      := shellcheck
 
 shell-check-args += --check-sourced
-shell-check-args += --extenal-sources
+shell-check-args += --external-sources
 
 ##-------------------##
 ##---]  TARGETS  [---##

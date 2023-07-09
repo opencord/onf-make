@@ -15,8 +15,17 @@ is-true  = $(if $(1),$(null),true)
 ##--------------------------##
 ##---]  LIBRARY MACROS  [---##
 ##--------------------------##
-is-null = $(if $(1),$(null),$(error $(1)= is undef))
-is-null-var = $(if $$(1),$(null),$(error $(1)= is undef))
+is-null              = $(if $(1),$(null),$(error $(1)= is undef))
+is-null-var          = $(if $$(1),$(null),$(error $(1)= is undef))
+is-null-var-indirect = $(if $(1),$(null),$(error $(1)= is undef))
+
+## variable flavor:
+# origin - undefned
+# default
+# environment
+# environment override
+# automatic
+# null(blah) ?   - true
 
 ## -----------------------------------------------------------------------
 ## Intent: Given an indirect var containing varname of a makefile *_ROOT
