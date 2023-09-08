@@ -18,7 +18,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
 # https://gerrit.opencord.org/plugins/gitiles/onf-make
-# ONF.makefile.version = 1.1
+# ONF.makefile.version = 1.2
 # -----------------------------------------------------------------------
 
 $(if $(DEBUG),$(warning ENTER))
@@ -33,7 +33,8 @@ ifdef NO-LINT-PYTHON
   NO-LINT-PYLINT := true
 endif
 
-include $(ONF_MAKEDIR)/lint/groovy.mk
+include $(ONF_MAKEDIR)/lint/doc8/include.mk
+include $(ONF_MAKEDIR)/lint/groovy/include.mk
 include $(ONF_MAKEDIR)/lint/jjb.mk
 include $(ONF_MAKEDIR)/lint/json.mk
 include $(ONF_MAKEDIR)/lint/license/include.mk
@@ -41,7 +42,7 @@ include $(ONF_MAKEDIR)/lint/makefile.mk
 include $(ONF_MAKEDIR)/lint/python/include.mk
 include $(ONF_MAKEDIR)/lint/shell.mk
 include $(ONF_MAKEDIR)/lint/tox/include.mk
-nclude $(ONF_MAKEDIR)/lint/yaml.mk
+include $(ONF_MAKEDIR)/lint/yaml.mk
 
 include $(ONF_MAKEDIR)/lint/help.mk
 
