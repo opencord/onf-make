@@ -41,18 +41,15 @@ lint-doc8-all      : lint-doc8
 lint-doc8-modified : lint-doc8
 
 ## -----------------------------------------------------------------------
-## https://github.com/pycqa/doc8
-##   create .config/doc8.ini
 ## -----------------------------------------------------------------------
 lint-doc8-excl := $(foreach dir,$(onf-excl-dirs),--ignore-path "$(dir)")
-lint-doc8-excl += --ignore-path $(venv-name)
 lint-doc8: lint-doc8-cmd-version
 
 	$(call banner-enter,Target $@)
 	$(activate) && doc8 --version
 	@echo
 	$(activate) && doc8 $(lint-doc8-excl)
-	$(call banner-leave,Target $@)
+	$(call banner-enter,Target $@)
 
 ## -----------------------------------------------------------------------
 ## Intent: Display command usage

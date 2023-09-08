@@ -21,6 +21,7 @@
 $(if $(DEBUG),$(warning ENTER))
 
 todo ::
+	@echo
 	@echo '[TODO]'
 	@echo '  o item 1'
 	@echo '  o item 2'

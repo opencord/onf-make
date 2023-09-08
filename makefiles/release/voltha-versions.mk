@@ -13,25 +13,32 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-# SPDX-FileCopyrightText: 2022 Open Networking Foundation (ONF) and the ONF Contributors
-# SPDX-License-Identifier: Apache-2.0
+# -----------------------------------------------------------------------
+# Intent: Helper makefile target used to setup for a release
 # -----------------------------------------------------------------------
 
 $(if $(DEBUG),$(warning ENTER))
 
-##--------------------##
-##---]  INCLUDES  [---##
-##--------------------##
-include $(ONF_MAKEDIR)/git/help.mk
-include $(ONF_MAKEDIR)/git/required.mk
+##-------------------##
+##---]  GLOBALS  [---##
+##-------------------##
+voltha-versions += master
+voltha-versions += voltha-2.12
+voltha-versions += voltha-2.11
+voltha-versions += voltha-2.8
+voltha-versions += playground
 
-## Special snowflakes: per-repository logic
--include $(ONF_MAKEDIR)/git/$(--repo-name--).mk
+# VOLTHA: release
+#   active : $(words 0,$(voltha-versions))
+#     next : $(words 1,$(voltha-versions))
+#     last : $(words 2,$(voltha-versions))
 
-ifdef USE-ONF-GIT-MK
-    # Dynamic loading when targets are requested by name
-    include $(ONF_MAKEDIR)/git/submodules.mk
-endif
+# fatal to make help (param is null)
+voltha-version ?= $(error $(MAKE) voltha-verison=voltha-x.yy is required)\
+
+voltha-release-this := $(word 1,$(voltha-versions)) 
+voltha-release-last := $(word 2,$(voltha-versions))
+
+$(if $(DEBUG),$(warning LEAVE))
 
 # [EOF]

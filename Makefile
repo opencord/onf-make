@@ -21,13 +21,13 @@
 ##-------------------##
 ##---]  GLOBALS  [---##
 ##-------------------##
+TOP         ?= .
 
 ##--------------------##
 ##---]  INCLUDES  [---##
 ##--------------------##
-include config.mk#                # configure
-include makefiles/include.mk      # top level include
-include makefiles/include.mk      # load library makefiles
+include $(TOP)/config.mk
+include $(TOP)/makefiles/include.mk
 
 ## Display make help text late
 include $(ONF_MAKEDIR)/help/trailer.mk

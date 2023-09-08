@@ -1,6 +1,6 @@
 # -*- makefile -*-
 # -----------------------------------------------------------------------
-# Copyright 2022 Open Networking Foundation (ONF) and the ONF Contributors
+# Copyright 2022-2023 Open Networking Foundation (ONF) and the ONF Contributors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,20 +18,19 @@
 # SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
 
-.PHONY: test-python
-# test :: test-python
-test-targets += test-python
+$(if $(DEBUG),$(warning ENTER))
 
-## -----------------------------------------------------------------------
-## Intent: Gather and invoke available unit tests
-## -----------------------------------------------------------------------
-test-python-args += -m unittest
-test-python:
-	$(PYTHON) $(test-python-args) discover -v
+##--------------------##
+##---]  INCLUDES  [---##
+##--------------------##
+include $(ONF_MAKEDIR)/release/help.mk
+include $(ONF_MAKEDIR)/release/required.mk
 
-## -----------------------------------------------------------------------
-## -----------------------------------------------------------------------
-help::
-	@echo "  test-python                   Invoke python unit tests"
+ifdef USE_VOLTHA_RELEASE_MK
+  # Dynamic loading when targets are requested by name
+  include $(ONF_MAKEDIR)/release/targets.mk
+endif
 
 # [EOF]
+
+

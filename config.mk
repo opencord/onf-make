@@ -16,7 +16,7 @@
 # -----------------------------------------------------------------------
 # https://gerrit.opencord.org/plugins/gitiles/onf-make
 # ONF.makefiles.include.version = 1.1
-# ONF.confg.mk                  = 1.1
+# ONF.confg.mk                  = 1.5
 # -----------------------------------------------------------------------
 
 # --repo-name-- :=
@@ -25,20 +25,20 @@
 ##--------------------------------##
 ##---]  Disable lint targets  [---##
 ##--------------------------------##
-# NO-LINT-DOC8      := true  **
-# NO-LINT-GOLANG    := true  **
+# NO-LINT-DOC8      := true
+# NO-LINT-GOLANG    := true
 # NO-LINT-GROOVY    := true#               # Note[1]
 # NO-LINT-JJB       := true#               # Note[2]
 # NO-LINT-JSON      := true#               # Note[1]
 # NO-LINT-MAKEFILE  := true#               # Note[1]
 # NO-LINT-REUSE     := true                # License check
-# NO-LINT-ROBOT     := true  **
+# NO-LINT-ROBOT     := true
 # NO-LINT-SHELL     := true#               # Note[1]
 # NO-LINT-YAML      := true#               # Note[1]
 
+# NO-LINT-FLAKE8    := true#               # Note[1]
 # NO-LINT-PYTHON    := true#               # Note[1]
 # NO-LINT-PYLINT    := true#               # Note[1]
-# NO-LINT-TOX       := true#               # Note[1]
 
 # Note[1] - A boatload of source to cleanup prior to enable.
 # Note[2] - No sources available
@@ -75,6 +75,10 @@ onf-excl-dirs += vendor#        # golang / voltha*-go
 onf-excl-dirs += patches#       # voltha docs - python upgrade
 onf-excl-dirs += .tox           # also a python dependency
 
+ifeq ($(--repo-name--),voltha-docs)
+  lint-doc8-excl += '_build'
+endif
+
 onf-excl-dirs ?= $(error onf-excl-dirs= is required)
 
 ##-----------------------------##
@@ -85,6 +89,9 @@ onf-excl-dirs ?= $(error onf-excl-dirs= is required)
 
 $(if $(filter %ci-management,$(--repo-name--)),\
   $(eval --REPO-IS-CI-MANAGEMENT-- := true)\
+)
+$(if $(filter %voltha-docs,$(--repo-name--)),\
+  $(eval --REPO-IS-VOLTHA-DOCS-- := true)\
 )
 
 # create makefiles/config/byrepo/{--repo-name--}.mk for one-off snowflakes ?
@@ -101,6 +108,11 @@ ifdef --REPO-IS-CI-MANAGEMENT--
   onf-excl-dirs += packer
 endif
 
+ifdef --REPO-IS-VOLTHA-DOCS--
+  onf-excl-dirs += _build
+  onf-excl-dirs += repos
+endif
+
 ifdef NO-LINT-PYTHON
   NO-LINT-FLAKE8 := true
   NO-LINT-PYLINT := true
@@ -112,12 +124,9 @@ endif
 
 onf-excl-dirs := $(sort $(strip $(onf-excl-dirs)))
 
-##----------------------##
-##---]  Debug Mode  [---##
-##----------------------##
-# export DEBUG           := 1      # makefile debug
-# export DISTUTILS_DEBUG := 1      # verbose: pip
-# export DOCKER_DEBUG    := 1      # verbose: docker
-# export VERBOSE         := 1      # makefile debug
+# --------------------------------------------------------------------
+# Repository specific values
+# --------------------------------------------------------------------
+# sterile-dirs += archives
 
 # [EOF]

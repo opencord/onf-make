@@ -1,6 +1,6 @@
 # -*- makefile -*-
 # -----------------------------------------------------------------------
-# Copyright 2022 Open Networking Foundation (ONF) and the ONF Contributors
+# Copyright 2023 Open Networking Foundation (ONF) and the ONF Contributors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,16 +12,17 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
-# limitations under the License.
-#
-# SPDX-FileCopyrightText: 2022 Open Networking Foundation (ONF) and the ONF Contributors
-# SPDX-License-Identifier: Apache-2.0
+# limitations under the License.d
 # -----------------------------------------------------------------------
 
-ifdef PYTHON_FILES
-  include $(ONF_MAKEDIR)/python/test/include.mk
-else
-  include $(ONF_MAKEDIR)/python/test/include.mk
-endif
+$(if $(DEBUG),$(warning ENTER))
+
+## repo:voltha-lib-go values for docker use
+
+go-cobertura-docker-mount := /app/src/github.com/opencord/voltha-lib-go/v7#   #
+protoc-sh-docker-mount    := /go/src/github.com/opencord/voltha-protos/v5#    #
+# voltha-protos-v5          := /go/src/github.com/opencord/voltha-protos/v5
+
+$(if $(DEBUG),$(warning LEAVE))
 
 # [EOF]
