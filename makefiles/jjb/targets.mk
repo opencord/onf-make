@@ -14,44 +14,58 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # -----------------------------------------------------------------------
+# Intent: Helper makefile target used to setup for a release
+# -----------------------------------------------------------------------
+
+$(if $(DEBUG),$(warning ENTER))
 
 ##-------------------##
 ##---]  GLOBALS  [---##
 ##-------------------##
-
-# Gather sources to check
-# TODO: implement deps, only check modified files
-shell-check-find := find .
-# vendor scripts but they really should be lintable
-shell-check-find += -name 'vendor' -prune
-shell-check-find += -o \( -name '*.sh' \)
-shell-check-find += -type f -print0
-
-# shell-check    := $(env-clean) pylint
-shell-check      := shellcheck
-
-shell-check-args += -a
+jjb-gen-dir := build
+# JJB_DEBUG := true
 
 ##-------------------##
 ##---]  TARGETS  [---##
 ##-------------------##
-ifndef NO-LINT-SHELL
-  lint : lint-shell
-endif
+all: help
 
 ## -----------------------------------------------------------------------
-## Intent: Perform a lint check on command line script sources
+## Intent: Generate pipeline jobs
 ## -----------------------------------------------------------------------
-lint-shell:
-	$(shell-check) -V
+.PHONY: jjb-gen
+
+jjb-gen-args := $(null)
+$(if $(JJB_DEBUG),$(eval jjb-gen-args += --log_level DEBUG))
+
+jjb-gen-log := $(jjb-gen-dir)/jjb-gen.log
+jjb-gen: $(venv-activate-script)
+
+	$(call banner-enter,Target $@)
+	@mkdir -p $(jjb-gen-dir)
+	@touch "$(jjb-gen-dir)/.sentinel"
+	( \
+	  $(activate) \
+	     && jenkins-jobs $(jjb-gen-args) test $(PWD)/jjb -o $(jjb-gen-dir) 3>&1 2>&1 \
+	) | tee "$(jjb-gen-log)"
+
+  ifdef LOGS
+	-@less "$(jjb-gen-log)"
+  endif
+
+  ifdef VERBOSE
 	@echo
-	$(HIDE)$(env-clean) $(shell-check-find) \
-	    | $(xargs-n1) $(shell-check) $(shell-check-args)
+	@echo "** Display generated pipelines"
+	find "$(jjb-gen-dir)" -newer "$(jjb-gen-dir)/.sentinel" -ls
+  endif
+
+	$(call banner-leave,Target $@)
 
 ## -----------------------------------------------------------------------
-## Intent: Display command help
 ## -----------------------------------------------------------------------
-help-summary ::
-	@echo '  lint-shell          Syntax check shell sources'
+sterile ::
+	$(RM) -r $(jjb-gen-dir)
+
+$(if $(DEBUG),$(warning LEAVE))
 
 # [EOF]

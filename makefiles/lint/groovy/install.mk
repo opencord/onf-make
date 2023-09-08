@@ -18,40 +18,32 @@
 ##-------------------##
 ##---]  GLOBALS  [---##
 ##-------------------##
+lint-groovy-cmds += $(shell which npm-groovy-lint)
+lint-groovy-cmds += $(HOME)/.npm/bin/npm-groovy-lint
+lint-groovy-cmds += /usr/bin/npm-groovy-lint
+# lint-groovy-cmds += /dev/null#                     # force existence
 
-# Gather sources to check
-# TODO: implement deps, only check modified files
-shell-check-find := find .
-# vendor scripts but they really should be lintable
-shell-check-find += -name 'vendor' -prune
-shell-check-find += -o \( -name '*.sh' \)
-shell-check-find += -type f -print0
-
-# shell-check    := $(env-clean) pylint
-shell-check      := shellcheck
-
-shell-check-args += -a
+lint-groovy-cmd = $(firstword $(wildcard $(lint-groovy-cmds)))
 
 ##-------------------##
 ##---]  TARGETS  [---##
 ##-------------------##
-ifndef NO-LINT-SHELL
-  lint : lint-shell
+ifndef NO-LINT-GROOVY
+
+  lint : lint-groovy
 endif
 
 ## -----------------------------------------------------------------------
-## Intent: Perform a lint check on command line script sources
+## Intent: Install npm-groovy-lint
 ## -----------------------------------------------------------------------
-lint-shell:
-	$(shell-check) -V
-	@echo
-	$(HIDE)$(env-clean) $(shell-check-find) \
-	    | $(xargs-n1) $(shell-check) $(shell-check-args)
+$(lint-groovy-cmd) : lint-groovy-install
+lint-groovy-install:
 
 ## -----------------------------------------------------------------------
 ## Intent: Display command help
 ## -----------------------------------------------------------------------
 help-summary ::
-	@echo '  lint-shell          Syntax check shell sources'
+	@echo '  lint-groovy-install          Syntax check groovy sources'
 
 # [EOF]
+

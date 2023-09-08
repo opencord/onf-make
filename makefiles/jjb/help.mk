@@ -13,39 +13,26 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-# SPDX-FileCopyrightText: 2022-2023 Open Networking Foundation (ONF) and the ONF Contributors
-# SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
-# https://gerrit.opencord.org/plugins/gitiles/onf-make
-# ONF.makefile.version = 1.2
+# Intent: Helper makefile target used to setup for a release
 # -----------------------------------------------------------------------
 
-$(if $(DEBUG),$(warning ENTER))
-
-help ::
+## ---------------------------------------------------------------------------
+## Intent: Display supported targets
+## ---------------------------------------------------------------------------
+help-jjb:
 	@echo
-	@echo "[LINT]"
+	@echo '[JJB]'
+	@echo '  jjb-gen             Generate a local set of JJB pipelines'
 
-## Disable python linting in bulk ?
-ifdef NO-LINT-PYTHON
-  NO-LINT-FLAKE8 := true
-  NO-LINT-PYLINT := true
-endif
+  ifdef VERBOSE
+	@echo '    LOGS=1            Display log from jjb-gen target'
+	@echo '    VERBOSE=1         Display generated pipeline files'
+  endif
 
-include $(ONF_MAKEDIR)/lint/doc8/include.mk
-include $(ONF_MAKEDIR)/lint/groovy/include.mk
-include $(ONF_MAKEDIR)/lint/jjb.mk
-include $(ONF_MAKEDIR)/lint/json.mk
-include $(ONF_MAKEDIR)/lint/license/include.mk
-include $(ONF_MAKEDIR)/lint/makefile.mk
-include $(ONF_MAKEDIR)/lint/python/include.mk
-include $(ONF_MAKEDIR)/lint/shell.mk
-include $(ONF_MAKEDIR)/lint/tox/include.mk
-include $(ONF_MAKEDIR)/lint/yaml/include.mk
-
-include $(ONF_MAKEDIR)/lint/help.mk
-
-$(if $(DEBUG),$(warning LEAVE))
+## ---------------------------------------------------------------------------
+## ---------------------------------------------------------------------------
+help ::
+	@echo '  help-jjb            Display Jenkins Job Builder targets'
 
 # [EOF]

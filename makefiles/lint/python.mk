@@ -21,37 +21,33 @@
 
 # Gather sources to check
 # TODO: implement deps, only check modified files
-shell-check-find := find .
-# vendor scripts but they really should be lintable
-shell-check-find += -name 'vendor' -prune
-shell-check-find += -o \( -name '*.sh' \)
-shell-check-find += -type f -print0
+python-check-find := find . -name '*venv*' -prune\
+  -o \( -name '*.py' \)\
+  -type f -print0
 
-# shell-check    := $(env-clean) pylint
-shell-check      := shellcheck
+# python-check    := $(env-clean) pylint
+python-check    := pylint
 
-shell-check-args += -a
+# python-check-args += --dry-run
 
 ##-------------------##
 ##---]  TARGETS  [---##
 ##-------------------##
-ifndef NO-LINT-SHELL
-  lint : lint-shell
+ifndef NO-LINT-PYTHON
+  lint : lint-python
 endif
 
 ## -----------------------------------------------------------------------
-## Intent: Perform a lint check on command line script sources
+## Intent: Perform a lint check on makefile sources
 ## -----------------------------------------------------------------------
-lint-shell:
-	$(shell-check) -V
-	@echo
-	$(HIDE)$(env-clean) $(shell-check-find) \
-	    | $(xargs-n1) $(shell-check) $(shell-check-args)
+lint-python:
+	$(HIDE)$(env-clean) $(python-check-find) \
+	    | $(xargs-n1) $(python-check) $(python-check-args)
 
 ## -----------------------------------------------------------------------
 ## Intent: Display command help
 ## -----------------------------------------------------------------------
 help-summary ::
-	@echo '  lint-shell          Syntax check shell sources'
+	@echo '  lint-python         Syntax check python sources (*.py)'
 
 # [EOF]
