@@ -15,7 +15,14 @@
 # limitations under the License.
 # -----------------------------------------------------------------------
 # https://gerrit.opencord.org/plugins/gitiles/onf-make
-# ONF.makefile.version = 1.2
+# ONF.makefile.virtualenv.version = 1.2
+# -----------------------------------------------------------------------
+# Usage:
+#   include makefiles/virtualenv/include.m
+#
+#   Target Dependencies:
+#     tgt : $(venv-activate-patched)     python 3.10+ local use
+#     tgt : $(venv-activate-script)      python < v3.8
 # -----------------------------------------------------------------------
 
 $(if $(DEBUG),$(warning ENTER))
@@ -23,14 +30,14 @@ $(if $(DEBUG),$(warning ENTER))
 ##-------------------##
 ##---]  GLOBALS  [---##
 ##-------------------##
-.PHONY: venv
+.PHONY: venv venv-patched
 
 ##------------------##
 ##---]  LOCALS  [---##
 ##------------------##
 venv-name            ?= .venv#                            # default install directory
-venv-abs-path        := $(PWD)/$(venv-name)
-venv-activate-bin    := $(venv-name)/bin
+venv-abs-path        := $(PWD)/$(venv-name)#              #
+venv-activate-bin    := $(venv-name)/bin#                 # no whitespace
 venv-activate-script := $(venv-activate-bin)/activate#    # dependency
 
 # Intent: activate= is a macro for accessing the virtualenv activation script#
@@ -45,9 +52,9 @@ activate             ?= set +u && source $(venv-activate-script) && set -u
 ## -----------------------------------------------------------------------
 $(venv-activate-script):
 	@echo
-	@echo "============================="
-	@echo "Installing python virtual env"
-	@echo "============================="
+	@echo '============================='
+	@echo 'Installing python virtual env'
+	@echo '============================='
 	virtualenv -p python3 $(venv-name)
 	$(activate) && python -m pip install --upgrade pip
 	$(activate) && pip install --upgrade setuptools
@@ -61,7 +68,20 @@ $(venv-activate-script):
 ## Intent: Explicit named installer target w/o dependencies.
 ##         Makefile targets should depend on venv-activate-script.
 ## -----------------------------------------------------------------------
-venv: $(venv-activate-script)
+venv-activate-patched := $(venv-activate-script).patched
+venv-activate-patched : $(venv-activate-patched)
+$(venv-activate-patched) : $(venv-activate-script)
+	$(call banner-enter,Target $@)
+	$(ONF_MAKEDIR)/virtualenv/python_310_migration.sh
+	touch $@
+	$(call banner-leave,Target $@)
+
+## -----------------------------------------------------------------------
+## Intent: Explicit named installer target w/o dependencies.
+##         Makefile targets should depend on venv-activate-script.
+## -----------------------------------------------------------------------
+venv         : $(venv-activate-script)
+venv-patched : $(venv-activate-patched)
 
 ## -----------------------------------------------------------------------
 ## Intent: Revert installation to a clean checkout
