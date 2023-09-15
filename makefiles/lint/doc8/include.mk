@@ -29,6 +29,13 @@ DOC8_SOURCE     ?= $(error DOC8_SOURCE= is required)
 # include $(ONF_MAKEDIR)/lint/doc8/help.mk
 include $(ONF_MAKEDIR)/lint/doc8/install.mk
 
+# -----------------------------------------------------------------------
+# Well that is annoying.  Cannot pass two --config switches, doc8 will
+# use only one.  Repos have more special exclusions so pass onf-make
+# doc8 config as command line args so local makefiles to use --config
+# -----------------------------------------------------------------------
+# lint-doc8-args += --config $(ONF_MAKEDIR)/lint/doc8/doc8.ini
+
 ## -----------------------------------------------------------------------
 ## -----------------------------------------------------------------------
 ifndef NO-LINT-DOC8
@@ -42,13 +49,15 @@ lint-doc8-modified : lint-doc8
 
 ## -----------------------------------------------------------------------
 ## -----------------------------------------------------------------------
-lint-doc8-excl := $(foreach dir,$(onf-excl-dirs),--ignore-path "$(dir)")
+## [TODO] - move lint-doc8-excl into doc8.ini
+# lint-doc8-excl := $(foreach dir,$(onf-excl-dirs) $(lint-doc8-excl),--ignore-path "$(dir)")
+lint-doc8-excl := $(null)
 lint-doc8: lint-doc8-cmd-version
 
 	$(call banner-enter,Target $@)
 	$(activate) && doc8 --version
 	@echo
-	$(activate) && doc8 $(lint-doc8-excl)
+	$(activate) && doc8 $(lint-doc8-excl) $(lint-doc8-args)
 	$(call banner-enter,Target $@)
 
 ## -----------------------------------------------------------------------

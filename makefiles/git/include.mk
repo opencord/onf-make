@@ -30,8 +30,8 @@ include $(ONF_MAKEDIR)/git/required.mk
 -include $(ONF_MAKEDIR)/git/$(--repo-name--).mk
 
 ifdef USE-ONF-GIT-MK
-    # Dynamic loading when targets are requested by name
-    include $(ONF_MAKEDIR)/git/submodules.mk
+  # Dynamic loading when targets are requested by name
+  include $(ONF_MAKEDIR)/git/submodules.mk
 endif
 
 # [EOF]

@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # -----------------------------------------------------------------------
+# https://gerrit.opencord.org/plugins/gitiles/onf-make
+# ONF.makefiles.lint.groovy.version = 1.1.1 (+local edits)
+# -----------------------------------------------------------------------
 
 ##-------------------##
 ##---]  GLOBALS  [---##
@@ -29,6 +32,10 @@ groovy-check-args := $(null)
 ##-------------------##
 ##---]  TARGETS  [---##
 ##-------------------##
+
+## -----------------------------------------------------------------------
+## Intent: Enabled by repository_sandbox_root/config.mk
+## -----------------------------------------------------------------------
 ifndef NO-LINT-GROOVY
   lint : lint-groovy
 endif
@@ -37,7 +44,7 @@ endif
 ## All or on-demand
 ##   make lint-groovy BY_SRC="a/b/c.groovy d/e/f.groovy"
 ## -----------------------------------------------------------------------
-ifdef LINT_SRC
+ifdef GROOVY_SRC
   lint-groovy : lint-groovy-src
 else
   lint-groovy : lint-groovy-all
@@ -53,33 +60,36 @@ lint-groovy-all:
   | $(xargs-n1) $(groovy-check) $(groovy-check-args)
 
 ## -----------------------------------------------------------------------
-## Intent: Perform lint check on a named list of files
+## Intent: On-demand lint checking
 ## -----------------------------------------------------------------------
-BY_SRC ?= $(error $(MAKE) $@ BY_SRC= is required)
 lint-groovy-src:
+  ifndef GROOVY_SRC
+	@echo "ERROR: Usage: $(MAKE) $@ GROOVY_SRC="
+	@exit 1
+  endif
 	$(groovy-check) --version
 	@echo
-#	$(foreach fyl,$(BY_SRC),$(groovy-check) $(groovy-check-args) $(fyl))
-	$(groovy-check) $(groovy-check-args) $(BY_SRC)
+	$(HIDE) $(groovy-check) $(groovy-check-args) $(GROOVY_SRC)
 
 ## -----------------------------------------------------------------------
 ## Intent: Perform lint check on a named list of files
 ## -----------------------------------------------------------------------
-BYGIT = $(shell git diff --name-only HEAD | grep '\.groovy')
+# lint-groovy-bygit = $(shell git diff --name-only HEAD | grep '\.groovy')
+lint-groovy-bygit = $(git status -s | grep '\.sh' | grep -v -e '^D' -e '^?' | cut -c4-)
 lint-groovy-mod:
 	$(groovy-check) --version
 	@echo
-	$(foreach fyl,$(BYGIT),$(groovy-check) $(groovy-check-args) $(fyl))
+	$(foreach fyl,$(lint-groovy-bygit),$(groovy-check) $(groovy-check-args) $(fyl))
 
 ## -----------------------------------------------------------------------
 ## Intent: Display command help
 ## -----------------------------------------------------------------------
 help-summary ::
 	@echo '  lint-groovy          Conditionally lint groovy source'
-	@echo '      BY_SRC=a/b/c.groovy d/e/f.groovy'
   ifdef VERBOSE
-	@echo '  lint-groovy-all    Lint all available sources'
-	@echo '  lint-groovy-mod    Lint locally modified (git status)'
-	@echo '  lint-groovy-src    Lint individually (BY_SRC=list-of-files)'
+	@echo '  lint-groovy-all      Lint all available sources'
+	@echo '  lint-groovy-mod      Lint locally modified (git status)'
+	@echo '  lint-groovy-src      Lint individually (BY_SRC=list-of-files)'
   endif
+
 # [EOF]

@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # -----------------------------------------------------------------------
+# https://gerrit.opencord.org/plugins/gitiles/onf-make
+# ONF.makefile.version = 1.1
+# -----------------------------------------------------------------------
 
 ##-------------------##
 ##---]  GLOBALS  [---##
@@ -27,10 +30,11 @@ shell-check-find += -name 'vendor' -prune
 shell-check-find += -o \( -name '*.sh' \)
 shell-check-find += -type f -print0
 
-# shell-check    := $(env-clean) pylint
-shell-check      := shellcheck
+shell-check    := $(env-clean) shellcheck
+# shell-check      := shellcheck
 
-shell-check-args += -a
+shell-check-args += --check-sourced
+shell-check-args += --external-sources
 
 ##-------------------##
 ##---]  TARGETS  [---##
@@ -40,18 +44,61 @@ ifndef NO-LINT-SHELL
 endif
 
 ## -----------------------------------------------------------------------
+## All or on-demand
+## -----------------------------------------------------------------------
+ifdef LINT_SRC
+  lint-shell : lint-shell-src
+else
+  lint-shell : lint-shell-all
+endif
+
+## -----------------------------------------------------------------------
 ## Intent: Perform a lint check on command line script sources
 ## -----------------------------------------------------------------------
-lint-shell:
+lint-shell-all:
 	$(shell-check) -V
 	@echo
 	$(HIDE)$(env-clean) $(shell-check-find) \
 	    | $(xargs-n1) $(shell-check) $(shell-check-args)
 
 ## -----------------------------------------------------------------------
+## Intent: On-demand lint checking
+## -----------------------------------------------------------------------
+lint-shell-src:
+  ifndef SHELL_SRC
+	@echo "ERROR: Usage: $(MAKE) $@ SHELL_SRC="
+	@exit 1
+  endif
+	$(shell-check) --version
+	@echo
+	$(HIDE) $(shell-check) $(shell-check-args) $(SHELL_SRC)
+
+## -----------------------------------------------------------------------
+## Intent: Perform lint check on a named list of files
+## -----------------------------------------------------------------------
+# git show --diff-filter=AM --pretty="format:" --name-only #{commitId}
+# lint-shell-bygit = $(shell git diff --name-only HEAD | grep '\.sh')
+lint-shell-bygit = $(git status -s | grep '\.sh' | grep -v -e '^D' -e '^?' | cut -c4-)
+
+# $(error lint-shell-bygit = $(lint-shell-bygit))
+lint-shell-mod:
+	$(shell-check) --version
+	@echo
+	$(foreach fyl,$(lint-shell-bygit),$(shell-check) $(shell-check-args) $(fyl))
+
+## -----------------------------------------------------------------------
 ## Intent: Display command help
 ## -----------------------------------------------------------------------
 help-summary ::
-	@echo '  lint-shell          Syntax check shell sources'
+	@echo '  lint-shell          Conditionally lint shell source'
+  ifdef VERBOSE
+	@echo '  lint-shell-all      Lint all available sources'
+	@echo '  lint-shell-mod      Lint locally modified (git status)'
+	@echo '  lint-shell-src      Lint individually (BY_SRC=list-of-files)'
+  endif
+
+# [SEE ALSO]
+# -----------------------------------------------------------------------
+#   o https://www.shellcheck.net/wiki/Directive
 
 # [EOF]
