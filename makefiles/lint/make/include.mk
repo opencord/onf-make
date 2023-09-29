@@ -23,28 +23,10 @@
 
 $(if $(DEBUG),$(warning ENTER))
 
-help ::
-	@echo
-	@echo "[LINT]"
+## Bleeding early import handled by makefiles/include.mk
+# include $(ONF_MAKEDIR)/lint/make/warn-undef-vars.mk
 
-## Disable python linting in bulk ?
-ifdef NO-LINT-PYTHON
-  NO-LINT-FLAKE8 := true
-  NO-LINT-PYLINT := true
-endif
-
-include $(ONF_MAKEDIR)/lint/doc8/include.mk
-include $(ONF_MAKEDIR)/lint/groovy/include.mk
-include $(ONF_MAKEDIR)/lint/jjb.mk
-include $(ONF_MAKEDIR)/lint/json.mk
-include $(ONF_MAKEDIR)/lint/license/include.mk
-include $(ONF_MAKEDIR)/lint/make/include.mk
-include $(ONF_MAKEDIR)/lint/python/include.mk
-include $(ONF_MAKEDIR)/lint/shell/include.mk
-include $(ONF_MAKEDIR)/lint/tox/include.mk
-include $(ONF_MAKEDIR)/lint/yaml/include.mk
-
-include $(ONF_MAKEDIR)/lint/help.mk
+include $(ONF_MAKEDIR)/lint/make/makefile.mk
 
 $(if $(DEBUG),$(warning LEAVE))
 

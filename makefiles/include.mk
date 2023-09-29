@@ -45,6 +45,8 @@ TOP ?= $(patsubst %/makefiles/include.mk,%,$(onf-mk-abs))
 ##--------------------##
 ##---]  INCLUDES  [---##
 ##--------------------##
+include $(ONF_MAKEDIR)/lint/make/warn-undef-vars.mk  # target lint-make helper
+
 include $(ONF_MAKEDIR)/consts.mk
 include $(ONF_MAKEDIR)/help/include.mk       # render target help
 include $(ONF_MAKEDIR)/utils/include.mk      # dependency-less helper macros
