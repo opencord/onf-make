@@ -15,25 +15,34 @@
 # limitations under the License.
 # -----------------------------------------------------------------------
 
-##-------------------##
-##---]  GLOBALS  [---##
-##-------------------##
-
-##-------------------##
-##---]  TARGETS  [---##
-##-------------------##
-ifndef NO-LINT-REUSE
-  lint : lint-reuse
-endif
-
-lint-reuse-all : lint-reuse
-lint-reuse-mod : lint-reuse
-lint-reuse-src : lint-reuse
+$(if $(DEBUG),$(warning ENTER))
 
 ## -----------------------------------------------------------------------
-## Intent: Perform a lint check on makefile sources
+## Intent: Display topic help
 ## -----------------------------------------------------------------------
-lint-reuse:
-	reuse --root . lint
+help-summary ::
+	@printf '  %-30s %s\n' 'lint-reuse'\
+      'License syntax check'
+	@printf '  %-30s %s\n' 'lint-reuse-help'\
+	  'Show verbose target help'
+	@printf '  %-30s %s\n' 'lint-license'\
+      'See target lint-reuse'
+  ifdef VERBOSE
+	@$(MAKE) --no-print-directory lint-reuse-help
+  endif
+
+## -----------------------------------------------------------------------
+## Intent: Display extended topic help
+## -----------------------------------------------------------------------
+.PHONY: lint-reuse-help
+lint-reuse-help ::
+	@printf '  %-30s %s\n' 'lint-reuse-all'\
+	  'License check available sources'
+	@printf '  %-30s %s\n' 'lint-reuse-mod'\
+	  'License check locally modified files (git status)'
+	@printf '  %-30s %s\n' 'lint-reuse-src'\
+	  'License check files by path'
+
+$(if $(DEBUG),$(warning LEAVE))
 
 # [EOF]

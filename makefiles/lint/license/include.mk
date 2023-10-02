@@ -15,27 +15,17 @@
 # limitations under the License.
 # -----------------------------------------------------------------------
 
-##-------------------##
-##---]  GLOBALS  [---##
-##-------------------##
+##--------------------##
+##---]  INCLUDES  [---##
+##--------------------##
+include $(ONF_MAKEDIR)/lint/license/help.mk
+include $(ONF_MAKEDIR)/lint/license/install.mk
+include $(ONF_MAKEDIR)/lint/license/reuse.mk
 
-##-------------------##
-##---]  TARGETS  [---##
-##-------------------##
-ifndef NO-LINT-REUSE
-  lint : lint-license
-endif
-
-## -----------------------------------------------------------------------
-## Intent: Perform a lint check on makefile sources
-## -----------------------------------------------------------------------
-lint-license:
-	reuse --root . lint
-
-## -----------------------------------------------------------------------
-## Intent: Display command help
-## -----------------------------------------------------------------------
-help-summary ::
-	@echo '  lint-reuse              License syntax checking'
+# Alias targets
+lint-license : lint-reuse
+lint-license-all : lint-reuse-all
+lint-license-mod : lint-reuse-mod
+lint-license-src : lint-reuse-src
 
 # [EOF]
