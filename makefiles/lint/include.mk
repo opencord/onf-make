@@ -40,7 +40,7 @@ include $(ONF_MAKEDIR)/lint/json.mk
 include $(ONF_MAKEDIR)/lint/license/include.mk
 include $(ONF_MAKEDIR)/lint/makefile.mk
 include $(ONF_MAKEDIR)/lint/python/include.mk
-include $(ONF_MAKEDIR)/lint/shell.mk
+include $(ONF_MAKEDIR)/lint/shell/include.mk
 include $(ONF_MAKEDIR)/lint/tox/include.mk
 include $(ONF_MAKEDIR)/lint/yaml/include.mk
 

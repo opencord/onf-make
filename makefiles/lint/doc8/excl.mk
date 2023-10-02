@@ -20,21 +20,31 @@ $(if $(DEBUG),$(warning ENTER))
 ## -----------------------------------------------------------------------
 ## -----------------------------------------------------------------------
 
-## excl := $(wildcar */*/.git)
+lint-doc8-excl-raw += '*/.git'
 lint-doc8-excl-raw += '$(venv-name)'
 lint-doc8-excl-raw += '*/$(venv-name)'
+
+# Should we filter generated content as redundant ?
+# Considering _build will be published and consumed.
 $(if $(BUILDDIR),\
   $(excl lint-doc8-excl-raw += '$(BUILDDIR)'))
 
+# -----------------------------------------------------------------------
 # YUCK! -- overhead
 #   o Submodule(s) use individual/variant virtualenv install paths.
 #   o Exclude special snowflakes to enable library makefile use.
 #   o All can use virtualenv.mk for consistent names and cleanup
 #   o [TODO] Ignore submodules, individual repos should check their sources.
+# -----------------------------------------------------------------------
+lint-doc8-excl-raw += '*/venv_*'#   # '*/venv_cord'
+lint-doc8-excl-raw += '*/*_cord'#   # '*/vst_venv'
 
-lint-doc8-excl-raw += '*/venv_cord'
-lint-doc8-excl-raw += '*/vst_venv'
-
+## -----------------------------------------------------------------------
+## repo:voltha-docs exclusions
+## Migrate into one of:
+##   makefiles/local/lint/doc8/doc8.ini
+##   makefiles/local/lint/doc8/excl.mk
+## -----------------------------------------------------------------------
 lint-doc8-excl-raw += './cord-tester'
 lint-doc8-excl-raw += './repos/cord-tester'
 
