@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # -----------------------------------------------------------------------
+# NOTE: The doc8 command runs recursively on directories so targets
+#       *-mod and *-src are not yet supported.
+# -----------------------------------------------------------------------
 
 ##--------------------##
 ##---]  INCLUDES  [---##

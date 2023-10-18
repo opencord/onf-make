@@ -19,7 +19,7 @@
 # ONF.confg.mk                  = 1.5
 # -----------------------------------------------------------------------
 
-# --repo-name-- :=
+--repo-name-- := onf-make
 --repo-name-- ?= $(error --repo-name--= is required)
 
 ##--------------------------------##
@@ -76,7 +76,7 @@ onf-excl-dirs += patches#       # voltha docs - python upgrade
 onf-excl-dirs += .tox           # also a python dependency
 
 ifeq ($(--repo-name--),voltha-docs)
-  lint-doc8-excl += '_build'
+  lint-doc8-excl += '_build' # TODO: deprecate
 endif
 
 onf-excl-dirs ?= $(error onf-excl-dirs= is required)
@@ -90,6 +90,7 @@ onf-excl-dirs ?= $(error onf-excl-dirs= is required)
 $(if $(filter %ci-management,$(--repo-name--)),\
   $(eval --REPO-IS-CI-MANAGEMENT-- := true)\
 )
+
 $(if $(filter %voltha-docs,$(--repo-name--)),\
   $(eval --REPO-IS-VOLTHA-DOCS-- := true)\
 )

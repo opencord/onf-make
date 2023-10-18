@@ -25,16 +25,26 @@ ifndef mk-include--onf-make # single-include guard macro
 
 $(if $(DEBUG),$(warning ENTER))
 
+##-------------------##
+##---]  GLOBALS  [---##
+##-------------------##
+
 ## -----------------------------------------------------------------------
 ## Define vars based on relative import (normalize symlinks)
 ## Usage: include makefiles/onf/include.mk
+## Overide-by: makefiles/onf-lib/makefiles/include.mk
+##             when repo:onf-make is used as a git-submodule
 ## -----------------------------------------------------------------------
 onf-mk-abs    ?= $(abspath $(lastword $(MAKEFILE_LIST)))
 onf-mk-top    := $(subst /include.mk,$(null),$(onf-mk-abs))
+onf-mk-tmp    := $(onf-mk-top)/tmp
 ONF_MAKEDIR   := $(onf-mk-top)
 
 TOP ?= $(patsubst %/makefiles/include.mk,%,$(onf-mk-abs))
 
+##--------------------##
+##---]  INCLUDES  [---##
+##--------------------##
 include $(ONF_MAKEDIR)/consts.mk
 include $(ONF_MAKEDIR)/help/include.mk       # render target help
 include $(ONF_MAKEDIR)/utils/include.mk      # dependency-less helper macros

@@ -59,7 +59,7 @@ sterile ::
 ## -----------------------------------------------------------------------
 ## Intent: Display command usage
 ## -----------------------------------------------------------------------
-help::
-	@echo '  lint-doc8-install       Install the doc8 tool'
+lint-doc8-help ::
+	@printf '  %-25.25s %s\n' 'lint-doc8-install' 'Install the doc8 tool'
 
 # [EOF]
