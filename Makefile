@@ -32,4 +32,23 @@ include $(TOP)/makefiles/include.mk
 ## Display make help text late
 include $(ONF_MAKEDIR)/help/trailer.mk
 
+## -----------------------------------------------------------------------
+## Intent: Helper target for interactive README.md viewing
+##   Note: This target has limited use for repo:onf-make and this directory
+##   Todo: Add makefiles/[lint/]md/include.mk and generalize logic
+## -----------------------------------------------------------------------
+view-docs-src := README.md $(wildcard docs/*.md)
+view-docs-dep := $(addprefix view-dep^,$(view-docs-src))
+
+.PHONY: view $(view-docs-dep)
+view :: $(view-docs-dep)
+
+$(view-docs-dep): # view-dep^README.md => README.md
+	-pandoc $(lastword $(subst ^,$(space),$@)) | lynx -stdin
+
+help ::
+	@echo
+	@printf '  %-25.25s  %s\n' 'view'\
+  'Rendering *.md docs for interactive viewing'
+
 # [EOF]

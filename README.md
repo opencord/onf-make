@@ -53,19 +53,6 @@ Hierarchy
     |   |   |   |-- shell.mk        Invoke shellcheck command on scripts
     |   |   |   |-- yaml            Syntax check yaml configs
   
-TODO
-====
-
-- Refactor and merge logic from available repository makefiles/ directories.
-- Update to make use of library makefiles
-
-    - [setup.sh](http://github.com/opencord/onf-make/blob/master/bin/setup.sh)
-    - {repository}/makefiles/{local, onf-make}/
-    - Create [config.mk](https://github.com/opencord/onf-make/blob/master/config.mk) to enable targets and features.
-
-- Exercise make lint targets, bulk cleanup is needed across all repositories.
-- Relocate $sandbox/config.mk into makefiles/config.mk
-
 NOTES
 =====
 
@@ -76,3 +63,10 @@ NOTES
 - README.md can be rendered locally using
 
     - pandoc README.md | lynx -stdin
+    - make view
+
+SEE ALSO
+========
+
+- [Makefile Variables & Debugging](docs/VARIABLES.md)
+- [Todo List](docs/todo.md)
