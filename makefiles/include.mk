@@ -20,7 +20,7 @@
 # https://gerrit.opencord.org/plugins/gitiles/onf-make
 # ONF.makefiles.include.version = 1.1
 # -----------------------------------------------------------------------
-
+#
 ifndef mk-include--onf-make # single-include guard macro
 
 $(if $(DEBUG),$(warning ENTER))
@@ -31,18 +31,18 @@ $(if $(DEBUG),$(warning ENTER))
 
 ## -----------------------------------------------------------------------
 ## Define vars based on relative import (normalize symlinks)
-## Usage: include makefiles/onf/include.mk
+## Usage: include makefiles/onf-lib/include.mk
 ## Overide-by: makefiles/onf-lib/makefiles/include.mk
 ##             when repo:onf-make is used as a git-submodule
 ## -----------------------------------------------------------------------
-onf-mk-abs    ?= $(abspath $(lastword $(MAKEFILE_LIST)))
+onf-mk-abs    := $(abspath $(lastword $(MAKEFILE_LIST)))
 onf-mk-top    := $(subst /include.mk,$(null),$(onf-mk-abs))
 onf-mk-tmp    := $(onf-mk-top)/tmp
 ONF_MAKEDIR   := $(onf-mk-top)
 
 TOP ?= $(patsubst %/makefiles/include.mk,%,$(onf-mk-abs))
 
-##--------------------##
+#--------------------##
 ##---]  INCLUDES  [---##
 ##--------------------##
 include $(ONF_MAKEDIR)/lint/make/warn-undef-vars.mk  # target lint-make helper
@@ -77,6 +77,9 @@ $(if $(USE-ONF-DOCKER-MK),$(eval include $(ONF_MAKEDIR)/docker/include.mk))
 ##---]  TARGETS  [---##
 ##-------------------##
 include $(ONF_MAKEDIR)/targets/include.mk # clean, sterile
+
+## Display make help text late
+include $(ONF_MAKEDIR)/help/trailer.mk
 
 $(if $(DEBUG),$(warning LEAVE))
 

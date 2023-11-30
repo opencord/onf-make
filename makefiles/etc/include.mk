@@ -17,31 +17,10 @@
 # SPDX-FileCopyrightText: 2017-2023 Open Networking Foundation (ONF) and the ONF Contributors
 # SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
-# Usage:
-#
-# mytarget:
-#     $(call banner-enter,target $@)
-#     @echo "Hello World"
-#     $(call banner-leave,target $@)
-# -----------------------------------------------------------------------
 
 $(if $(DEBUG),$(warning ENTER))
 
-target-banner = ** ---------------------------------------------------------------------------
-
-## -----------------------------------------------------------------------
-## Intent: Return a command line able to display a banner hilighting
-##         make target processing within a logfile.
-## -----------------------------------------------------------------------
-banner-enter=\
-    @echo -e \
-    "\n"\
-    "$(target-banner)\n"\
-    "** $(MAKE) ENTER: $(1)\n"\
-    "$(target-banner)"\
-
-banner-leave=\
-    @echo -e "** $(MAKE) LEAVE: $(1)"
+include $(ONF_MAKEDIR)/etc/features.mk
 
 $(if $(DEBUG),$(warning LEAVE))
 

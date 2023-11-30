@@ -18,6 +18,13 @@
 .PHONY: help clean help test
 .DEFAULT_GOAL := help
 
+##---------------------##
+##---]  BOOTSTRAP  [---##
+##---------------------##
+onf-mk-abs    ?= $(abspath $(lastword $(MAKEFILE_LIST)))
+onf-mk-top    := $(dir $(onf-mk-abs))
+onf-mk-top    := $(patsubst %/,%,$(onf-mk-top))
+
 ##-------------------##
 ##---]  GLOBALS  [---##
 ##-------------------##
@@ -26,11 +33,7 @@ TOP         ?= .
 ##--------------------##
 ##---]  INCLUDES  [---##
 ##--------------------##
-include $(TOP)/config.mk
-include $(TOP)/makefiles/include.mk
-
-## Display make help text late
-include $(ONF_MAKEDIR)/help/trailer.mk
+include $(onf-mk-top)/makefiles/include.mk
 
 ## -----------------------------------------------------------------------
 ## Intent: Helper target for interactive README.md viewing

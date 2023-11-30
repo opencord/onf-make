@@ -27,6 +27,7 @@
 ##---]  GLOBALS  [---##
 ##-------------------##
 set -euo pipefail
+# declare -g -i debug=1
 
 ## -----------------------------------------------------------------------
 ## Intent: Display a message with formatting
@@ -51,20 +52,71 @@ function error()
     exit 1
 }
 
-##----------------##
-##---]  MAIN  [---##
-##----------------##
+## -----------------------------------------------------------------------
+## Intent: Archive current directory before we begin
+## -----------------------------------------------------------------------
+function archive_sandbox()
+{
+	local abs="$(realpath --canonicalize-existing '.')"
+	local dir="${abs##*/}"
+	local ts="$(date '+%Y%m%d%H%M%S')"
+	local prefix="../${dir}-all/backups"
 
-## Avoid trashing a work-in-progress
-path='makefiles/local/include.mk'
-[[ -e "$path" ]] && { error "Detected upgrade path: $path"; }
+	banner "Archive current directory ($dir)"
 
-banner "Archive current directory"
-tar czvf ../backup-setup.tgz .
+#	make sterile >/dev/null # nuke lingering .venv/ installs
+#	make clean-all >/dev/null # nuke lingering .venv/ installs
 
-## Migration patches should be simple and plentiful.
-if [[ ! -d makefiles-orig ]]; then
-    cat <<EOM
+	declare -a targs=()
+	targs+=('--create')
+
+    ## Set archive compression level
+	local compress='bzip2'
+	local ext
+	case "$compress" in
+	  bzip2) targs+=('--bzip2'); ext='bz2' ;;
+	  gzip) targs+=('--gzip'); ext='tgz' ;;
+	  zstd) targs+=('--zstd'); ext='zst' ;;
+	*) error "Detected invalid compression [$compress]" ;;
+	esac
+
+	local out="${prefix}/${ts}.${ext}"
+
+	targs+=('--file' "$out")
+
+	mkdir -p "$prefix"
+	tar "${targs[@]}" '.'
+	/bin/ls -l "$out"
+	return
+}	
+
+## -----------------------------------------------------------------------
+## Intent: Install feature enabling makefile.
+## -----------------------------------------------------------------------
+function install_config_mk
+{
+	local dst='makefiles/config.mk'
+	if [[ -f "$dst" ]]; then
+		:
+	elif [[ -f 'config.mk' ]]; then
+		git mv config.mk "$dst"
+	else
+		rsync -v --checksum makefiles/onf-lib/config.mk "$dst"
+	fi
+
+	return
+}
+
+## -----------------------------------------------------------------------
+## Intent: Re-home existing local makefiles/ into makefiles/local
+## -----------------------------------------------------------------------
+function patch_detection()
+{
+	[[ ! -d makefiles ]] && return
+
+    ## Migration patches should be simple and plentiful.
+	if [[ ! -d makefiles-orig ]]; then
+	    cat <<EOM
 
 * -----------------------------------------------------------------------
 * Replacing a repository makefile directory is deployed
@@ -82,8 +134,28 @@ if [[ ! -d makefiles-orig ]]; then
   3) Update Makefile to include makefiles/include.mk
 
 EOM
-    exit 1
-fi
+		exit 1
+	fi
+	return
+}
+
+##----------------##
+##---]  MAIN  [---##
+##----------------##
+while [[ $# -gt 0 ]]; do
+	arg=$1; shift
+	case "$arg" in
+	  debug) declare -g -i debug=1 ;;
+	  *) error "Detected invalid switch [$arg]" ;;
+	esac
+done
+
+## Avoid trashing a work-in-progress
+path='makefiles/local/include.mk'
+[[ -e "$path" ]] && { error "Detected upgrade path: $path"; }
+
+archive_sandbox
+patch_detection
 
 mkdir -p makefiles
 pushd makefiles || { error 'pushd makefiles failed'; }
@@ -103,7 +175,8 @@ popd || { error 'popd makefiles failed'; }
 banner 'Prep work for pending checkin'
 git add makefiles/include.mk
 git add makefiles/local/include.mk
-git mv config.mk makefiles/config.mk
+install_config_mk
 git add makefiles
+git status
 
 # [EOF]
