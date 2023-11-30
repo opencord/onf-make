@@ -15,6 +15,10 @@
 # limitations under the License.
 # -----------------------------------------------------------------------
 
+$(if $(DEBUG),$(eval LINT_DOC8_DEBUG=1))
+
+$(if $(LINT_DOC8_DEBUG),$(warning ENTER))
+
 ##-------------------##
 ##---]  GLOBALS  [---##
 ##-------------------##
@@ -47,13 +51,28 @@ lint-doc8-mod : lint-doc8
 lint-doc8-src : lint-doc8
 
 ## -----------------------------------------------------------------------
+## Intent: Morph exclusion strings into command line arguments.
+##   NOTE: Do not double-quote argument: -ignore-path "$(dir)"
+##         Single quotes surrounding exclusion strings added in doc8/excl.mk
+##         will become part of exclusion string and fail pattern matching.
 ## -----------------------------------------------------------------------
-## [TODO] - move lint-doc8-excl into doc8.ini
-lint-doc8-excl := $(foreach dir,$(onf-excl-dirs) $(lint-doc8-excl),--ignore-path "$(dir)")
+## [TODO] - move lint-doc8-excl into doc8.ini (autogenerate)
+## -----------------------------------------------------------------------
+lint-doc8-excl := $(strip \
+  $(foreach dir,$(onf-excl-dirs) $(lint-doc8-excl-raw),\
+	$(if $(LINT_DOC8_DEBUG),$(info ** linux-doc8-excl += [$(dir)]))\
+    --ignore-path $(dir))\
+)
+
+## -----------------------------------------------------------------------
+## Usage: make lint-doc8 LINT_DOC8_DEBUG=1
+## -----------------------------------------------------------------------
 lint-doc8: lint-doc8-cmd-version
 
 	$(call banner-enter,Target $@)
 	$(activate) && doc8 $(lint-doc8-excl) $(lint-doc8-args)
 	$(call banner-enter,Target $@)
+
+$(if $(LINT_DOC8_DEBUG),$(warning LEAVE))
 
 # [EOF]
