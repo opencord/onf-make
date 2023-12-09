@@ -1,6 +1,6 @@
 # -*- makefile -*-
 # -----------------------------------------------------------------------
-# Copyright 2017-2023 Open Networking Foundation (ONF) and the ONF Contributors
+# Copyright 2017-2024 Open Networking Foundation (ONF) and the ONF Contributors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,33 +14,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # -----------------------------------------------------------------------
-# SPDX-FileCopyrightText: 2017-2023 Open Networking Foundation (ONF) and the ONF Contributors
+# SPDX-FileCopyrightText: 2017-2024 Open Networking Foundation (ONF) and the ONF Contributors
 # SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
-# https://gerrit.opencord.org/plugins/gitiles/onf-make
-# ONF.makefiles.include.version = 1.1
-# -----------------------------------------------------------------------
-#
-ifndef mk-include--onf-make # single-include guard macro
 
 $(if $(DEBUG),$(warning ENTER))
 
 ##-------------------##
 ##---]  GLOBALS  [---##
 ##-------------------##
+# DEBUG := 1
+# DEBUG-onf-mk-paths := 1
 
 ## -----------------------------------------------------------------------
-## Define vars based on relative import (normalize symlinks)
-## Usage: include makefiles/onf-lib/include.mk
-## Overide-by: makefiles/onf-lib/makefiles/include.mk
-##             when repo:onf-make is used as a git-submodule
+## [LOADER] Define path vars based on library include directory
 ## -----------------------------------------------------------------------
-onf-mk-abs    := $(abspath $(lastword $(MAKEFILE_LIST)))
-onf-mk-top    := $(subst /include.mk,$(null),$(onf-mk-abs))
-onf-mk-tmp    := $(onf-mk-top)/tmp
-ONF_MAKEDIR   := $(onf-mk-top)
+$(foreach makefile,$(lastword $(MAKEFILE_LIST)),\
+  $(foreach makedir,$(abspath $(dir $(makefile))),\
+    $(eval include $(makedir)/library-makefiles.mk)\
+))
 
-TOP ?= $(patsubst %/makefiles/include.mk,%,$(onf-mk-abs))
+$(call gen-mk-paths,onf-mk) # [ALSO] $(call gen-mk-include,onf-mk)
+
+## Missing required vars are fatal
+onf-mk-dir ?= $(error onf-mk-dir= is required)
+onf-mk-top ?= $(error onf-mk-top= is required)
+onf-mk-tmp := $(onf-mk-top)/tmp
+
+ONF_MAKEDIR   := $(onf-mk-dir)#   # TODO: Deprecate ONF_MAKEDIR and MAKEDIR
 
 #--------------------##
 ##---]  INCLUDES  [---##
@@ -67,6 +68,11 @@ $(if $(USE-VOLTHA-RELEASE-MK),\
 include $(ONF_MAKEDIR)/todo.mk
 include $(ONF_MAKEDIR)/help/variables.mk
 
+##------------------------------------##
+##---]  Languages & Interpreters  [---##
+##------------------------------------##
+# include $(ONF_MAKEDIR)/src/golang/mod-update.mk
+
 ##---------------------##
 ##---]  ON_DEMAND  [---##
 ##---------------------##
@@ -82,9 +88,5 @@ include $(ONF_MAKEDIR)/targets/include.mk # clean, sterile
 include $(ONF_MAKEDIR)/help/trailer.mk
 
 $(if $(DEBUG),$(warning LEAVE))
-
-mk-include--onf-make := true
-
-endif # mk-include--onf-make
 
 # [EOF]
