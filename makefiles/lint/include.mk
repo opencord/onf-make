@@ -17,9 +17,6 @@
 # SPDX-FileCopyrightText: 2022-2023 Open Networking Foundation (ONF) and the ONF Contributors
 # SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
-# https://gerrit.opencord.org/plugins/gitiles/onf-make
-# ONF.makefile.version = 1.2
-# -----------------------------------------------------------------------
 
 $(if $(DEBUG),$(warning ENTER))
 
@@ -34,6 +31,7 @@ ifdef NO-LINT-PYTHON
 endif
 
 include $(ONF_MAKEDIR)/lint/doc8/include.mk
+include $(ONF_MAKEDIR)/lint/golang/include.mk
 include $(ONF_MAKEDIR)/lint/groovy/include.mk
 include $(ONF_MAKEDIR)/lint/jjb.mk
 include $(ONF_MAKEDIR)/lint/json.mk
