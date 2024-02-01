@@ -54,10 +54,15 @@ endif
 ## Intent: Perform a lint check on command line script sources
 ## -----------------------------------------------------------------------
 lint-groovy-all:
+
+	$(call banner-enter,Target $@)
+
 	$(groovy-check) --version
 	@echo
 	$(HIDE)$(env-clean) find . -iname '*.groovy' -print0 \
   | $(xargs-n1) $(groovy-check) $(groovy-check-args)
+
+	$(call banner-leave,Target $@)
 
 ## -----------------------------------------------------------------------
 ## Intent: On-demand lint checking
@@ -72,7 +77,7 @@ lint-groovy-src:
 	$(HIDE) $(groovy-check) $(groovy-check-args) $(GROOVY_SRC)
 
 ## -----------------------------------------------------------------------
-## Intent: Perform lint check on a named list of files
+## Intent: Perform lint check on locally modified sources
 ## -----------------------------------------------------------------------
 # lint-groovy-bygit = $(shell git diff --name-only HEAD | grep '\.groovy')
 lint-groovy-bygit = $(git status -s | grep '\.sh' | grep -v -e '^D' -e '^?' | cut -c4-)
