@@ -27,7 +27,7 @@ $(if $(DEBUG),$(warning ENTER))
 ##         persistent content.  For ex removal of a python virtualenv adds
 ##         extra overhead to development iteration:
 ##           make clean   - preserve a virtual env
-##           make sterile - force reinstallation
+##           make sterile - force re-installation
 ## -----------------------------------------------------------------------
 .PHONY: sterile
 sterile :: clean

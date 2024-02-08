@@ -71,7 +71,8 @@ include $(ONF_MAKEDIR)/help/variables.mk
 ##------------------------------------##
 ##---]  Languages & Interpreters  [---##
 ##------------------------------------##
-# include $(ONF_MAKEDIR)/src/golang/mod-update.mk
+# [TODO] $(if $(golang-mode),$(eval include))
+include $(ONF_MAKEDIR)/golang/include.mk
 
 ##---------------------##
 ##---]  ON_DEMAND  [---##
