@@ -1,6 +1,6 @@
 # -*- makefile -*-
 # -----------------------------------------------------------------------
-# Copyright 2022-2023 Open Networking Foundation (ONF) and the ONF Contributors
+# Copyright 2022-2024 Open Networking Foundation (ONF) and the ONF Contributors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,9 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # -----------------------------------------------------------------------
-# https://gerrit.opencord.org/plugins/gitiles/onf-make
-# ONF.makefiles.lint.groovy.version = 1.1.1 (+local edits)
-# -----------------------------------------------------------------------
 
 ##-------------------##
 ##---]  GLOBALS  [---##
@@ -24,7 +21,11 @@
 
 groovy-check      := npm-groovy-lint
 
+groovy-check-conf := $(call path-by-makefile,.groovylintrc.json)
+
 groovy-check-args := $(null)
+groovy-check-args += --config "$(groovy-check-conf)"
+
 # groovy-check-args += --loglevel info
 # groovy-check-args += --ignorepattern
 # groovy-check-args += --verbose

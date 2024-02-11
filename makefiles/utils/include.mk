@@ -1,6 +1,6 @@
 # -*- makefile -*-
 # -----------------------------------------------------------------------
-# Copyright 2022-2023 Open Networking Foundation (ONF) and the ONF Contributors
+# Copyright 2022-2024 Open Networking Foundation (ONF) and the ONF Contributors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,6 +23,30 @@ $(if $(DEBUG),$(warning ENTER))
 # usage: $(call if-not,false,5)
 if-not = $(info 1=$(1), 2=$(2), 3=$(3))\
   $(if $(1),$(null),$(2))
+
+## -----------------------------------------------------------------------
+## Intent: Derive a filesystem path relative to the active makefile.
+##         Primary use is loading adjacent tool config files.
+##         Immediate evaluation (:=) needed to preserve path context.
+## Note: We could pass in var=MAKEFILE_LIST
+## -----------------------------------------------------------------------
+## Given:
+##   scalar   Filename to construct a path for
+## Return:
+##   scalar   Constructed path for the given filename
+## -----------------------------------------------------------------------
+## Usage:
+##   groovy-check-conf := $(call path-by-makefile,.groovylintrc.json)
+##   groovy-cmd        = npm-groovy-lint --config "$(groovy-check-conf)"
+## -----------------------------------------------------------------------
+path-by-makefile = $(strip \
+  $(foreach filename,$(1),\
+    $(foreach makefile,$(lastword $(MAKEFILE_LIST)),\
+    $(foreach makedir,$(subst /include.mk,$(null),$(makefile)),\
+      $(makedir)/$(filename)\
+    )\
+  ))\
+)
 
 $(if $(DEBUG),$(warning LEAVE))
 
