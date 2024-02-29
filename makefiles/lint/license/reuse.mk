@@ -18,11 +18,15 @@
 ##-------------------##
 ##---]  GLOBALS  [---##
 ##-------------------##
+$(call genpath-makefiles,lint-reuse-req-txt,requirements.txt)
+# $(error lint-reuse-req-text=$(lint-reuse-req-txt))
 
 ##-------------------##
 ##---]  TARGETS  [---##
 ##-------------------##
 ifndef NO-LINT-REUSE
+#  lint-reuse-mode := $(if $(have-reuse-files),mod,all)
+#  lint : lint-reuse-$(lint-reuse-mode)
   lint : lint-reuse
 endif
 
@@ -33,7 +37,10 @@ lint-reuse-src : lint-reuse
 ## -----------------------------------------------------------------------
 ## Intent: Perform a lint check on makefile sources
 ## -----------------------------------------------------------------------
-lint-reuse:
-	reuse --root . lint
+lint-reuse : lint-reuse-version
+
+	$(call banner-enter,Target $@)
+	$(activate) && $(REUSE) --root . lint
+	$(call banner-enter,Target $@)
 
 # [EOF]

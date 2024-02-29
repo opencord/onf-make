@@ -1,0 +1,5 @@
+# -*- makefile -*-
+
+reuse~=3.0.1
+
+# [EOF]

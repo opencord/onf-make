@@ -15,6 +15,11 @@
 # limitations under the License.
 # -----------------------------------------------------------------------
 
+##-------------------##
+##---]  GLOBALS  [---##
+##-------------------##
+REUSE ?= $(venv-activate-bin)/reuse
+
 ##--------------------##
 ##---]  INCLUDES  [---##
 ##--------------------##
@@ -23,7 +28,7 @@ include $(ONF_MAKEDIR)/lint/license/install.mk
 include $(ONF_MAKEDIR)/lint/license/reuse.mk
 
 # Alias targets
-lint-license : lint-reuse
+lint-license     : lint-reuse
 lint-license-all : lint-reuse-all
 lint-license-mod : lint-reuse-mod
 lint-license-src : lint-reuse-src

@@ -42,6 +42,8 @@ lint-reuse-help ::
 	  'License check locally modified files (git status)'
 	@printf '  %-30s %s\n' 'lint-reuse-src'\
 	  'License check files by path'
+	@printf '  %-30s %s\n' 'lint-reuse-install'\
+	  'pip install --requirements ./conf reuse'
 
 $(if $(DEBUG),$(warning LEAVE))
 

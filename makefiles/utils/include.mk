@@ -39,13 +39,37 @@ if-not = $(info 1=$(1), 2=$(2), 3=$(3))\
 ##   groovy-check-conf := $(call path-by-makefile,.groovylintrc.json)
 ##   groovy-cmd        = npm-groovy-lint --config "$(groovy-check-conf)"
 ## -----------------------------------------------------------------------
-path-by-makefile = $(strip \
+path-by-makefilepath-by-makefile = $(strip \
   $(foreach filename,$(1),\
     $(foreach makefile,$(lastword $(MAKEFILE_LIST)),\
-    $(foreach makedir,$(subst /include.mk,$(null),$(makefile)),\
-      $(makedir)/$(filename)\
+    $(foreach makedir,$(dir $(makefile)),\
+      $(makedir)$(filename)\
     )\
   ))\
+)
+
+## -----------------------------------------------------------------------
+## Intent: Improve function usability for path-by-makefilepath-by-makefile
+## -----------------------------------------------------------------------
+## Given:
+##   scalar   A makefile variable name to define
+##   scalar   Path within a makefile subdirectory to construct
+## Return:
+##   scalar   Constructed path for the given filename
+## -----------------------------------------------------------------------
+## Usage:
+##   $(call genpath-makefiles,tox-ini,tox.ini)
+##   $(info tox-ini = $(tox-ini))
+## -----------------------------------------------------------------------
+genpath-makefiles = $(strip \
+\
+  $(foreach var,$(1),\
+  $(foreach fyl,$(2),\
+    $(if true$(DEBUG),\
+      $(info $$(eval $(var) := $$(call path-by-makefilepath-by-makefile,$(fyl)))))\
+    $(eval $(var) := $(call path-by-makefilepath-by-makefile,$(fyl)))\
+	))\
+    $(var)\
 )
 
 $(if $(DEBUG),$(warning LEAVE))
