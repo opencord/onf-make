@@ -65,8 +65,6 @@ genpath-makefiles = $(strip \
 \
   $(foreach var,$(1),\
   $(foreach fyl,$(2),\
-    $(if true$(DEBUG),\
-      $(info $$(eval $(var) := $$(call path-by-makefilepath-by-makefile,$(fyl)))))\
     $(eval $(var) := $(call path-by-makefilepath-by-makefile,$(fyl)))\
 	))\
     $(var)\

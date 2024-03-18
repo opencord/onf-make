@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # -----------------------------------------------------------------------
-# -----------------------------------------------------------------------
 # Intent:
 #   This makefile defines dependencies that will install a python virtualenv
 #   beneath $(sandbox)/.venv/.  The $(activate) macro is used to source
@@ -51,17 +50,35 @@ $(if $(DEBUG),$(warning ENTER))
 ##---]  LOCALS  [---##
 ##------------------##
 venv-name            ?= .venv#                            # default install directory
-venv-abs-path        := $(PWD)/$(venv-name)#              #
+venv-abs-path        := $(sandbox-root)/$(venv-name)#     # Install directory
 venv-activate-bin    := $(venv-name)/bin#                 # no whitespace
 venv-activate-script := $(venv-activate-bin)/activate#    # dependency
 
+##--------------------##
+##---]  INCLUDES  [---##
+##--------------------##
+include $(ONF_MAKEDIR)/virtualenv/requirements-txt.mk
+include $(ONF_MAKEDIR)/virtualenv/version.mk
+
 # ------------------------------------------------------------------------
 # Intent: Define macro activate= to access virtualenv activation script.
+## -----------------------------------------------------------------------
 #  Usage:
 #    - $(activate) && python             # Syntax inlined within a target
 #    - PYTHON := $(activate) && python   # Define a named command macro
 # ------------------------------------------------------------------------
 activate             ?= set +u && source $(venv-activate-script) && set -u
+
+## -----------------------------------------------------------------------
+## Intent: Explicit named installer target w/o dependencies.
+##         Makefile targets should depend on venv-activate-script.
+## -----------------------------------------------------------------------
+venv := $(null)
+venv += $(venv-activate-script)#        # virtualenv -p python3
+venv += $(venv-requirements-txt)#       # pip install -r requirements.txt
+venv: $(venv)
+
+venv-patched : $(venv-activate-patched)
 
 ## -----------------------------------------------------------------------
 ## Intent: Activate script path dependency
@@ -70,18 +87,16 @@ activate             ?= set +u && source $(venv-activate-script) && set -u
 ##    o When the script does not exist install the virtual env and display.
 ## -----------------------------------------------------------------------
 $(venv-activate-script):
-	@echo
-	@echo '============================='
-	@echo 'Installing python virtual env'
-	@echo '============================='
+
+	$(call banner-enter,(virtualenv -p python))
+
 	virtualenv -p python3 $(venv-name)
 	$(activate) && python -m pip install --upgrade pip
 	$(activate) && pip install --upgrade setuptools
-	$(activate) && [[ -r requirements.txt ]] \
-	    && { python -m pip install -r requirements.txt; } \
-	    || { /bin/true; }
 
-	$(activate) && python --version
+	$(HIDE)$(MAKE) --no-print-directory venv-requirements venv-version
+
+	$(call banner-leave,(virtualenv -t python))
 
 ## -----------------------------------------------------------------------
 ## Intent: Explicit named installer target w/o dependencies.
@@ -99,8 +114,7 @@ $(venv-activate-patched) : $(venv-activate-script)
 ## Intent: Explicit named installer target w/o dependencies.
 ##         Makefile targets should depend on venv-activate-script.
 ## -----------------------------------------------------------------------
-venv         : $(venv-activate-script)
-venv-patched : $(venv-activate-patched)
+# venv         : $(venv-activate-script)
 
 ## -----------------------------------------------------------------------
 ## Intent: Revert installation to a clean checkout
@@ -111,13 +125,29 @@ sterile :: clean
 ## -----------------------------------------------------------------------
 ## -----------------------------------------------------------------------
 help ::
+	@printf '  %-33.33s %s\n' 'venv'         \
+	  'Create a python virtual environment'
+	@printf '  %-33.33s %s\n' 'venv-help'    \
+	  'Extended target help'
+
+## -----------------------------------------------------------------------
+## -----------------------------------------------------------------------
+venv-help ::
+	@printf '  %-33.33s %s\n' 'venv-patched' \
+	  'venv patched for v3.10.6+ use'
+
+	@printf '  %-33.33s %s\n' 'venv' \
+	  'Create a python virtual environment'
+	@printf '  %-33.33s %s\n' '  venv-name' \
+	  'virtualenv installation directory name'
+
+## -----------------------------------------------------------------------
+## -----------------------------------------------------------------------
+todo ::
+	@echo "Rename include.mk into virtualenv.mk"
+	@echo "Create include.mk as a simple primary include file for the directory"
 	@echo
-	@echo '[VIRTUAL ENV]'
-	@echo '  venv                Create a python virtual environment'
-	@echo '    venv-name=        Subdir name for virtualenv install'
-	@echo '  venv-activate-script         make macro name'
-	@echo '      $$(target) dependency    install python virtualenv'
-	@echo '      source $$(macro) && cmd  configure env and run cmd'
+	@echo "Extract venv patch logic into a separate makefile'
 
 $(if $(DEBUG),$(warning LEAVE))
 

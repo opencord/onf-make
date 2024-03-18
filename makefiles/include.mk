@@ -29,6 +29,9 @@ $(if $(DEBUG),$(warning ENTER))
 ## -----------------------------------------------------------------------
 ## [LOADER] Define path vars based on library include directory
 ## -----------------------------------------------------------------------
+sandbox-root := $(dir $(abspath $(firstword $(MAKEFILE_LIST))))
+sandbox-root := $(patsubst %/,%,$(sandbox-root))
+
 $(foreach makefile,$(lastword $(MAKEFILE_LIST)),\
   $(foreach makedir,$(abspath $(dir $(makefile))),\
     $(eval include $(makedir)/library-makefiles.mk)\
@@ -90,4 +93,15 @@ include $(ONF_MAKEDIR)/help/trailer.mk
 
 $(if $(DEBUG),$(warning LEAVE))
 
+## -----------------------------------------------------------------------
+## [VARS]
+##   sandbox-root     Path to top level directory containing [mM]akefile
+##
+##   onf-mk-top       Path to makefiles/ containing onf-make/ and local/
+##   onf-mk-tmp       Limited scratch area for repo:onf-make use
+##
+## [DEPRECATE]
+##   ONF_MAKEDIR      Replace with onf-mk-top/ {onf-mk}
+##   MAKEDIR          Replace with onf-mk-top/ {local}
+## -----------------------------------------------------------------------
 # [EOF]
