@@ -21,16 +21,15 @@
 # ONF.makefile.version = 1.0
 # -----------------------------------------------------------------------
 
-ifndef mk-include--onf-commands
+ifndef mk-include--onf-commands # guard macro, include once
 
-$(if $(DEBUG),$(warning ENTER))
+  $(if $(DEBUG),$(warning ENTER))
+  include $(onf-mk-dir)/commands/kail/include.mk
+  include $(onf-mk-dir)/commands/tox/include.mk
+  $(if $(DEBUG),$(warning LEAVE))
 
-include $(ONF_MAKEDIR)/commands/kail/include.mk
+  mk-include--onf-commands := true
 
-$(if $(DEBUG),$(warning LEAVE))
-
-mk-include--onf-commands := true
-
-endif # mk-include--onf-make
+endif # mk-include--onf-commands
 
 # [EOF]

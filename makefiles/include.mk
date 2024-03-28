@@ -55,10 +55,11 @@ include $(ONF_MAKEDIR)/consts.mk
 include $(ONF_MAKEDIR)/help/include.mk       # render target help
 include $(ONF_MAKEDIR)/utils/include.mk      # dependency-less helper macros
 include $(ONF_MAKEDIR)/etc/include.mk        # banner macros
-include $(ONF_MAKEDIR)/commands/include.mk   # Tools and local installers
 
 include $(ONF_MAKEDIR)/virtualenv/include.mk#  # python, lint, JJB dependency
 # include $(ONF_MAKEDIR)/patches/include.mk#   # Patch when python 3.10+ in use
+
+include $(ONF_MAKEDIR)/commands/include.mk   # Tools and local installers
 include $(ONF_MAKEDIR)/lint/include.mk
 
 include $(ONF_MAKEDIR)/gerrit/include.mk

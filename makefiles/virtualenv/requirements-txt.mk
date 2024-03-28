@@ -43,9 +43,8 @@ venv-requirements    : $(venv-requirements)
 $(venv-requirements) : requirements.txt
 
 	$(call banner-enter,venv-requirements)
-
-	$(activate) && python -m pip install -r 'requirements.txt'
 	@mkdir -p $(dir $@)
+	$(activate) && python -m pip install -r 'requirements.txt'
 	@touch $@
 
 	$(call banner-leave,venv-requirements)
