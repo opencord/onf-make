@@ -1,6 +1,6 @@
 # -*- makefile -*-
 # -----------------------------------------------------------------------
-# Copyright 2022-2023 Open Networking Foundation (ONF) and the ONF Contributors
+# Copyright 2022-2024 Open Networking Foundation (ONF) Contributors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,60 +14,46 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# SPDX-FileCopyrightText: 2022 Open Networking Foundation (ONF) and the ONF Contributors
+# SPDX-FileCopyrightText: 2022-2024 Open Networking Foundation Contributors
 # SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
 
 $(if $(DEBUG),$(warning ENTER))
 
-## -----------------------------------------------------------------------
-## Intent: Install the yamllint tool
-## -----------------------------------------------------------------------
-.PHONY: lint-yaml-install
-
-# -----------------------------------------------------------------------
-# We can(/should?) define a command macro
-# wait a bit until use cases are better known.
-# Initial use required inserting xargs bash -c "$(YAMLLINT) {}"
-# -----------------------------------------------------------------------
-# YAMLLINT ?= $(venv-activate-bin)/yamllint
-# YAMLLINT ?= $(activate) && yamllint
+##-------------------##
+##---]  GLOBALS  [---##
+##-------------------##
+yaml-requirements-txt := $(call path-by-makefilepath-by-makefile,requirements.txt)
 
 ## -----------------------------------------------------------------------
-## Intent: Display yamllint command version string.
-##   Note: As a side effect, install yamllint by dependency
+## Note:
+##   o simple: Installed through requirements.txt
+##   o This target can make usage on-demand.
 ## -----------------------------------------------------------------------
-.PHONY: lint-yaml-cmd-version
-lint-yaml-cmd-version : $(venv-activate-bin)/yamllint
-
-	$(HIDE) echo
-	$< --version
-
-## -----------------------------------------------------------------------
-## Intent: On-demand instalation of the yamllint command
-## -----------------------------------------------------------------------
-lint-yaml-install := $(venv-activate-bin)/yamllint
-$(lint-yaml-install) : $(venv-activate-script)
+.PHONY: yaml-install
+yaml-install: $(venv-activate-script)
 
 	$(call banner-enter,Target $@)
-	$(activate) && pip install yamllint
-	$(call banner-leave,Target $@)
+	$(activate) && python -m pip install -r "$(yaml-requirements-txt)"
+	$(call banner-enter,Target $@)
 
 ## -----------------------------------------------------------------------
-## Intent: Purge yamllint tool installation
+## Intent: Display version of the installed yaml command.
+##   Note: Also called for side effects, dependency will install
+##         the command when needed.
 ## -----------------------------------------------------------------------
-sterile ::
-	$(HIDE)$(RM) "$(venv-abs-bin)/yamllint"
-	$(HIDE)$(RM) -r .venv/lib/*/site-packages/yamllint
-
-        # Remove both file:command and dir:libraries
-        # find "$(venv-abs-path)" -iname 'yamllint' -print0 \
-        #    | $(xargs-n1-clean) $(RM) -r {}
+.PHONY: yaml-version
+yaml-version : yaml-install
+	$(activate) && yamllint --version
 
 ## -----------------------------------------------------------------------
-## Intent: Display command usage
 ## -----------------------------------------------------------------------
-help::
-	@echo '  lint-yaml-install       Install the yamllint tool'
+yaml-help ::
+	@printf '  %-33.33s %s\n' 'yaml-install' \
+	  'Install the yaml command (dependency driven)'
+	@printf '  %-33.33s %s\n' 'yaml-version' \
+	  'Display version string for venv installed yaml'
+
+$(if $(DEBUG),$(warning LEAVE))
 
 # [EOF]

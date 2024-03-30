@@ -20,6 +20,8 @@
 # Intent:
 # -----------------------------------------------------------------------
 
+$(if $(DEBUG),$(warning ENTER))
+
 ##-------------------##
 ##---]  GLOBALS  [---##
 ##-------------------##
@@ -80,10 +82,11 @@ lint-shell-downloads=\
 
 .PHONY: lint-shell-install
 lint-shell-install : $(lint-shell-cmd)
-$(lint-shell-cmd)  :
+$(lint-shell-cmd)  : lf-mktemp
 
 	$(call banner-enter,(Target $@))
 
+# onf-mk-tmp
 	$(call banner,(shellcheck: Download))
 	$(HIDE)wget --quiet --unlink $(lint-shell-downloads)
 	$(HIDE)umask 022 && mkdir -p $(dir $@)
@@ -111,5 +114,14 @@ lint-shell-help ::
       'Install syntax checking tool shellcheck'
 	@printf '  %-30s %s\n' 'lint-shellcheck-cmd-version' \
 	  'Library target able to display version of shellcheck command'
+
+## -----------------------------------------------------------------------
+## -----------------------------------------------------------------------
+lint-shell-todo ::
+	@echo 'Use makefiles/main/tempdir/'
+	@echo '   ** Depend on target lf-mk-tmp   $(lint-shell-cmd) : lf-mk-tmp'
+	@echo '   ** wget into $(lf-mk-tmp)     (wget --quiet --directory-prefix "dir")'
+
+$(if $(DEBUG),$(warning LEAVE))
 
 # [EOF]
