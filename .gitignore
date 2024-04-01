@@ -29,4 +29,18 @@ tmp/
 ## Python patch creation
 staging/
 
+## -----------------------------------------------------------------------
+## License checking:
+##   o Absolutely no exceptions, exclusions are not supported.
+##   o We cannot simply hack around the problem by inlininig a notice
+##     to disable checking because comments will be branded into the
+##     patched file.
+##   o Maybe this is OK given the patched file is a derived work but
+##     legal input required before that answer can be used.
+## -----------------------------------------------------------------------
+makefiles/virtualenv/patches/lib/python3.10/site-packages/robot/utils/normalizing.py/patch
+makefiles/virtualenv/patches/lib/python3.10/site-packages/robot/utils/robottypes3.py/patch
+makefiles/virtualenv/patches/lib/python3.10/site-packages/sphinx/util/typing.py/patch
+makefiles/virtualenv/patches/lib/python3.10/site-packages/sphinxcontrib/openapi/utils.py/patch
+
 # [EOF]
