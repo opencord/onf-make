@@ -1,15 +1,38 @@
-TODO
-====
+makefiles
+=========
 
-- Refactor and merge logic from available repository makefiles/ directories.
-- Update to make use of library makefiles
+Two distinct makefile directories are in use:
+  - Common library makefiles (onf-make/)
+  - Project specific makefile logic (local/)
 
-    - [setup.sh](http://github.com/opencord/onf-make/blob/master/bin/setup.sh)
-    - {repository}/makefiles/{local, onf-make}/
-    - Create [config.mk](https://github.com/opencord/onf-make/blob/master/config.mk) to enable targets and features.
+Makefile logic is loaded/accessed through make macros:
+    ONF_MAKEDIR=   Common makefile targets and logic
+    MAKEDIR=       Repository/project specific targets
 
-- Exercise make lint targets, bulk cleanup is needed across all repositories.
-- Relocate $sandbox/config.mk into makefiles/config.mk
+Common library targets are defined/augmented as double colon rules:
+    build clean help sterile test :: # dup targets OK
+
+    % make sterile test
+
+All other targets are defined and accessed as single colon rules:
+    repo-rule : # fail on duplicate targets
+
+
+All makefiles/ logic can be access from the top level Makefile
+==============================================================
+
+TOP ?= $(strip $(dir $(abspath $(lastword $(MAKEFILE_LIST))) ) )    
+include $(TOP)/config.mk
+include $(TOP)/makefiles/include.mk
+
+Which in turn will load onf-make/ and local/
+============================================
+include $(ONF_MAKE)/makefiles/include.mk
+include $(MAKEDIR)/makefiles/include.mk
+
+% make sterile build
+
+# [EOF]
 
 <!---
 
