@@ -86,7 +86,8 @@ env-clean      ?= /usr/bin/env --ignore-environment
 #   lint-shell:
 #   <tab>find . -name '*.sh' -print0 | $(xargs-n1-clean) shellcheck $(args)
 # -----------------------------------------------------------------------
-xargs-cmd       := xargs -0 -t --no-run-if-empty
+xargs-cmd0       := xargs -0 --no-run-if-empty
+xargs-cmd       := $(xargs-cmd0) -t
 xargs-n1        := $(xargs-cmd) -n1
 xargs-n1-clean  := $(env-clean) $(xargs-n1)
 xargs-cmd-clean := $(env-clean) $(xargs-cmd)

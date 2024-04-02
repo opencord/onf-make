@@ -1,6 +1,6 @@
 # -*- makefile -*-
 # -----------------------------------------------------------------------
-# Copyright 2017-2022 Open Networking Foundation
+# Copyright 2017-2024 Open Networking Foundation (ONF) and the ONF Contributors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,18 +14,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # -----------------------------------------------------------------------
-# NOTE: The doc8 command runs recursively on directories so targets
-#       *-mod and *-src are not yet supported.
+# SPDX-FileCopyrightText: 2017-2024 Open Networking Foundation (ONF) and the ONF Contributors
+# SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
 
-##--------------------##
-##---]  INCLUDES  [---##
-##--------------------##
-include $(onf-mk-top)/lint/doc8/ini.mk
-include $(onf-mk-top)/lint/doc8/excl.mk
-include $(onf-mk-top)/lint/doc8/help.mk
-include $(onf-mk-top)/lint/doc8/install.mk
+ifdef DEBUG
 
-include $(onf-mk-top)/lint/doc8/doc8.mk
+$(info  )
+$(warning ** IAM)
+$(info -----------------------------------------------------------------------)
+$(info ** lf-mk-tmp         = $(lf-mk-tmp))
+$(info ** lf-mk-tmp-name    = $(lf-mk-tmp-name))
+$(info ** lf-mk-tmp-create  = $(lf-mk-tmp-create))
+$(info  )
+$(info ** lf-mk-user-meta   = $(lf-mk-user-meta))
+$(info ** lf-mk-user-mktemp = $(lf-mk-user-mktemp))
+$(info ** lf-mk-meta-create = $(lf-mk-meta-create))
+$(info -----------------------------------------------------------------------)
+$(info  )
+
+endif # DEBUG
 
 # [EOF]

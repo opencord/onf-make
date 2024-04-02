@@ -1,6 +1,6 @@
 # -*- makefile -*-
 # -----------------------------------------------------------------------
-# Copyright 2017-2022 Open Networking Foundation
+# Copyright 2022-2024 Open Networking Foundation Contributors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,19 +13,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# -----------------------------------------------------------------------
-# NOTE: The doc8 command runs recursively on directories so targets
-#       *-mod and *-src are not yet supported.
+#
+# SPDX-FileCopyrightText: 2022-2024 Open Networking Foundation (ONF) Contributors
+# SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
 
-##--------------------##
-##---]  INCLUDES  [---##
-##--------------------##
-include $(onf-mk-top)/lint/doc8/ini.mk
-include $(onf-mk-top)/lint/doc8/excl.mk
-include $(onf-mk-top)/lint/doc8/help.mk
-include $(onf-mk-top)/lint/doc8/install.mk
+ifndef lf-mk-seen--main # guard macro, include once
 
-include $(onf-mk-top)/lint/doc8/doc8.mk
+  $(if $(DEBUG),$(warning ENTER))
+
+#   include $(onf-mk-dir)/main/tempdir.mk
+  include $(onf-mk-dir)/main/tempdir/include.mk
+  lf-mk-seen--main := true
+
+  $(if $(DEBUG),$(warning LEAVE))
+
+endif # lf-mk-seen--main
 
 # [EOF]

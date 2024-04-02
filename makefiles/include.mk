@@ -42,55 +42,60 @@ $(call gen-mk-paths,onf-mk) # [ALSO] $(call gen-mk-include,onf-mk)
 ## Missing required vars are fatal
 onf-mk-dir ?= $(error onf-mk-dir= is required)
 onf-mk-top ?= $(error onf-mk-top= is required)
-onf-mk-tmp := $(onf-mk-top)/tmp
+onf-mk-tmp := $(onf-mk-top)/tmp#  # TODO: Replace with lf-mk-tmp
+
+# per-repository paths: mirror repo:onf-make
+local-mk-top  := $(onf-mk-top)
+local-mk-dir  := $(dir $(onf-mk-dir))local
 
 ONF_MAKEDIR   := $(onf-mk-dir)#   # TODO: Deprecate ONF_MAKEDIR and MAKEDIR
 
 #--------------------##
 ##---]  INCLUDES  [---##
 ##--------------------##
-include $(ONF_MAKEDIR)/lint/make/warn-undef-vars.mk  # target lint-make helper
+include $(onf-mk-dir)/lint/make/warn-undef-vars.mk  # target lint-make helper
 
-include $(ONF_MAKEDIR)/consts.mk
-include $(ONF_MAKEDIR)/help/include.mk       # render target help
-include $(ONF_MAKEDIR)/utils/include.mk      # dependency-less helper macros
-include $(ONF_MAKEDIR)/etc/include.mk        # banner macros
+include $(onf-mk-dir)/consts.mk
+include $(onf-mk-dir)/help/include.mk       # render target help
+include $(onf-mk-dir)/utils/include.mk      # dependency-less helper macros
+include $(onf-mk-dir)/etc/include.mk        # banner macros
+include $(onf-mk-dir)/main/include.mk       # tempdir
 
-include $(ONF_MAKEDIR)/virtualenv/include.mk#  # python, lint, JJB dependency
-# include $(ONF_MAKEDIR)/patches/include.mk#   # Patch when python 3.10+ in use
+include $(onf-mk-dir)/virtualenv/include.mk#  # python, lint, JJB dependency
+# include $(onf-mk-dir)/patches/include.mk#   # Patch when python 3.10+ in use
 
-include $(ONF_MAKEDIR)/commands/include.mk   # Tools and local installers
-include $(ONF_MAKEDIR)/lint/include.mk
+include $(onf-mk-dir)/commands/include.mk   # Tools and local installers
+include $(onf-mk-dir)/lint/include.mk
 
-include $(ONF_MAKEDIR)/gerrit/include.mk
-include $(ONF_MAKEDIR)/git/include.mk
-include $(ONF_MAKEDIR)/jjb/include.mk
+include $(onf-mk-dir)/gerrit/include.mk
+include $(onf-mk-dir)/git/include.mk
+include $(onf-mk-dir)/jjb/include.mk
 
 $(if $(USE-VOLTHA-RELEASE-MK),\
-  $(eval include $(ONF_MAKEDIR)/release/include.mk))
+  $(eval include $(onf-mk-dir)/release/include.mk))
 
-include $(ONF_MAKEDIR)/todo.mk
-include $(ONF_MAKEDIR)/help/variables.mk
+include $(onf-mk-dir)/todo.mk
+include $(onf-mk-dir)/help/variables.mk
 
 ##------------------------------------##
 ##---]  Languages & Interpreters  [---##
 ##------------------------------------##
 # [TODO] $(if $(golang-mode),$(eval include))
-include $(ONF_MAKEDIR)/golang/include.mk
+include $(onf-mk-dir)/golang/include.mk
 
 ##---------------------##
 ##---]  ON_DEMAND  [---##
 ##---------------------##
-$(if $(USE-ONF-GERRIT-MK),$(eval include $(ONF_MAKEDIR)/gerrit/include.mk))
-$(if $(USE-ONF-DOCKER-MK),$(eval include $(ONF_MAKEDIR)/docker/include.mk))
+$(if $(USE-ONF-GERRIT-MK),$(eval include $(onf-mk-dir)/gerrit/include.mk))
+$(if $(USE-ONF-DOCKER-MK),$(eval include $(onf-mk-dir)/docker/include.mk))
 
 ##-------------------##
 ##---]  TARGETS  [---##
 ##-------------------##
-include $(ONF_MAKEDIR)/targets/include.mk # clean, sterile
+include $(onf-mk-dir)/targets/include.mk # clean, sterile
 
 ## Display make help text late
-include $(ONF_MAKEDIR)/help/trailer.mk
+include $(onf-mk-dir)/help/trailer.mk
 
 $(if $(DEBUG),$(warning LEAVE))
 

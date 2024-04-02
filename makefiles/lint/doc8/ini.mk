@@ -17,7 +17,9 @@
 # SPDX-FileCopyrightText: 2023-2024 Open Networking Foundation Contributors
 # SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
-# Intent:
+# Intent: doc8(s) --config switch will only accept one argument and
+#   config(s)/exclusion(s) are needed from multiple sources.
+#   This target will merge doc8.ini from onf-make/ and local/ for use.
 # -----------------------------------------------------------------------
 
 ##-------------------##
@@ -32,18 +34,12 @@ lint-doc8-ini-tmp = $(onf-mk-tmp)/doc8.ini
 lint-doc8-ini-tmp : $(lint-doc8-ini-tmp)
 
 # -----------------------------------------------------------------------
-# Intent: Doc8(s) --config switch will only accept one argument and
-#   configs/exclusions are needed from multiple sources.
-#   This target will merge doc8.ini from onf-make/ and local/ for use.
+# doc8 config files to merge: lf/makefiles/{onf-make,local}/
 # -----------------------------------------------------------------------
-# repo:onf-make is special, MAKEDIR=makefiles/local does not exist.
-# -----------------------------------------------------------------------
-lint-doc8-ini-raw := $(ONF_MAKEDIR)/lint/doc8/doc8.ini
-ifneq ($(--repo-name--),onf-make)
-  lint-doc8-ini-raw += $(MAKEDIR)/lint/doc8/doc8.ini
-endif
+lint-doc8-ini-raw := $(onf-mk-dir)/lint/doc8/doc8.ini
+lint-doc8-ini-raw += $(local-mk-dir)/lint/doc8/doc8.ini
 
-lint-doc8-ini-src = $(wildcard $(lint-doc8-ini-raw))
+lint-doc8-ini-src = $(wildcard $(sort $(lint-doc8-ini-raw)))
 $(lint-doc8-ini-tmp):
 
 	$(call banner,Target $@)
