@@ -1,6 +1,6 @@
 # -*- makefile -*-
 # -----------------------------------------------------------------------
-# Copyright 2022-2023 Open Networking Foundation (ONF) and the ONF Contributors
+# Copyright 2024 Open Networking Foundation Contributors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,23 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# SPDX-FileCopyrightText: 2022-2023 Open Networking Foundation (ONF) and the ONF Contributors
+# SPDX-FileCopyrightText: 2024 Open Networking Foundation Contributors
 # SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
-# https://gerrit.opencord.org/plugins/gitiles/onf-make
-# ONF.makefile.version = 1.0
-# -----------------------------------------------------------------------
 
-ifndef mk-include--onf-commands # guard macro, include once
+$(if $(DEBUG),$(warning ENTER))
 
-  $(if $(DEBUG),$(warning ENTER))
-  include $(onf-mk-dir)/commands/kail/include.mk
-  include $(onf-mk-dir)/commands/pre-commit/include.mk
-  include $(onf-mk-dir)/commands/tox/include.mk
-  $(if $(DEBUG),$(warning LEAVE))
+include $(onf-mk-dir)/commands/pre-commit/pre-commit.mk
+include $(onf-mk-dir)/commands/pre-commit/install.mk
 
-  mk-include--onf-commands := true
-
-endif # mk-include--onf-commands
+$(if $(DEBUG),$(warning LEAVE))
 
 # [EOF]
