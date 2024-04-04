@@ -28,6 +28,7 @@ $(if $(DEBUG),$(warning ENTER))
 lint-doc8-excl-raw += '*/.git'
 lint-doc8-excl-raw += '$(venv-name)'
 lint-doc8-excl-raw += '*/$(venv-name)'
+lint-doc8-excl-raw += 'LICENSES/'
 
 # Should we filter generated content as redundant ?
 # Considering _build will be published and consumed.
