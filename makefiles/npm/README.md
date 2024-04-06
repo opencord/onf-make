@@ -1,6 +1,36 @@
-# -*- makefile -*-
+NVM / Node Package Manager
+==========================
+
+Makefiles beneath node-js/ maintain nvm and node package installs.
+
+Directories:
+
+- $(sandbox)/.tmp
+  - $(sandbox)/.tmp/.nvm
+  - $(sandbox)/.tmp/node_modules
+
+| Command | Description |
+| ------- | ----------- |
+| make npm-groovy-lint | Install the groovy linting tool  |
+| make sterile         | Remove .tmp/{.nvm, node_modules} |
+
+nvm/install.sh
+--------------
+
+Install script is downloaded from an external source so makefile targets
+at present are only intended for interactive use.  Install script could
+be checked in and trusted packages proxied but a review of copyrights,
+etc need to happen first.
+
+Node Packages in use:
+---------------------
+
+- npm-groovy-lint
+
+<!---
+
 # -----------------------------------------------------------------------
-# Copyright 2023-2024 Open Networking Foundation Contributors
+# Copyright 2024 Open Networking Foundation Contributors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,27 +44,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # -----------------------------------------------------------------------
-# SPDX-FileCopyrightText: 2023-2024 Open Networking Foundation Contributors
+# SPDX-FileCopyrightText: 2024 Open Networking Foundation Contributors
 # SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
 # Intent:
-#   o Construct a find command able to gather python files with filtering.
-#   o Used by library makefiles flake8.mk and pylint.mk for iteration.
 # -----------------------------------------------------------------------
 
-## -----------------------------------------------------------------------
-## Intent: Construct a find command to gather a list of python files
-##         with exclusions.
-## -----------------------------------------------------------------------
-## Usage:
-#	$(activate) & $(call gen-python-find-cmd) | $(args-n1) pylint
-## -----------------------------------------------------------------------
-gen-python-find-cmd = \
-  $(strip \
-    find . \
-	  $(foreach dir,$(onf-excl-dirs),-not -path './$(dir)/*') \
-      -a -name '*.py' \
-      -print0 \
-  )
-
-# [EOF]
+--->

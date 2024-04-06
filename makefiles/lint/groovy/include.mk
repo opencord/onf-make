@@ -1,6 +1,6 @@
 # -*- makefile -*-
 # -----------------------------------------------------------------------
-# Copyright 2022-2024 Open Networking Foundation Contributors
+# Copyright 2017-2024 Open Networking Foundation Contributors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,93 +14,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # -----------------------------------------------------------------------
-# SPDX-FileCopyrightText: 2022-2024 Open Networking Foundation Contributors
+# SPDX-FileCopyrightText: 2017-2024 Open Networking Foundation Contributors
 # SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
 # Intent:
 # -----------------------------------------------------------------------
 
-##-------------------##
-##---]  GLOBALS  [---##
-##-------------------##
+# ------------------------------------------------------------
+# Intent: Generate command installer targets with dependencies
+# ------------------------------------------------------------
+$(call gen-npm-install,npm-groovy-lint)
 
-groovy-check      := npm-groovy-lint
+##--------------------##
+##---]  INCLUDES  [---##
+##--------------------##
+include $(onf-mk-top)/lint/groovy/command.mk
 
-groovy-check-conf := $(call path-by-makefile,.groovylintrc.json)
-
-groovy-check-args := $(null)
-groovy-check-args += --config "$(groovy-check-conf)"
-
-# groovy-check-args += --loglevel info
-# groovy-check-args += --ignorepattern
-# groovy-check-args += --verbose
-
-##-------------------##
-##---]  TARGETS  [---##
-##-------------------##
-
-## -----------------------------------------------------------------------
-## Intent: Enabled by repository_sandbox_root/config.mk
-## -----------------------------------------------------------------------
-ifndef NO-LINT-GROOVY
-  lint : lint-groovy
-endif
-
-## -----------------------------------------------------------------------
-## All or on-demand
-##   make lint-groovy BY_SRC="a/b/c.groovy d/e/f.groovy"
-## -----------------------------------------------------------------------
-ifdef GROOVY_SRC
-  lint-groovy : lint-groovy-src
-else
-  lint-groovy : lint-groovy-all
-endif
-
-## -----------------------------------------------------------------------
-## Intent: Perform a lint check on command line script sources
-## -----------------------------------------------------------------------
-lint-groovy-all:
-
-	$(call banner-enter,Target $@)
-
-	$(groovy-check) --version
-	@echo
-	$(HIDE)$(env-clean) find . -iname '*.groovy' -print0 \
-  | $(xargs-n1) $(groovy-check) $(groovy-check-args)
-
-	$(call banner-leave,Target $@)
-
-## -----------------------------------------------------------------------
-## Intent: On-demand lint checking
-## -----------------------------------------------------------------------
-lint-groovy-src:
-  ifndef GROOVY_SRC
-	@echo "ERROR: Usage: $(MAKE) $@ GROOVY_SRC="
-	@exit 1
-  endif
-	$(groovy-check) --version
-	@echo
-	$(HIDE) $(groovy-check) $(groovy-check-args) $(GROOVY_SRC)
-
-## -----------------------------------------------------------------------
-## Intent: Perform lint check on locally modified sources
-## -----------------------------------------------------------------------
-# lint-groovy-bygit = $(shell git diff --name-only HEAD | grep '\.groovy')
-lint-groovy-bygit = $(git status -s | grep '\.sh' | grep -v -e '^D' -e '^?' | cut -c4-)
-lint-groovy-mod:
-	$(groovy-check) --version
-	@echo
-	$(foreach fyl,$(lint-groovy-bygit),$(groovy-check) $(groovy-check-args) $(fyl))
-
-## -----------------------------------------------------------------------
-## Intent: Display command help
-## -----------------------------------------------------------------------
-help-summary ::
-	@echo '  lint-groovy          Conditionally lint groovy source'
-  ifdef VERBOSE
-	@echo '  lint-groovy-all      Lint all available sources'
-	@echo '  lint-groovy-mod      Lint locally modified (git status)'
-	@echo '  lint-groovy-src      Lint individually (BY_SRC=list-of-files)'
-  endif
+include $(onf-mk-top)/lint/groovy/help.mk
+include $(onf-mk-top)/lint/groovy/install.mk
+include $(onf-mk-top)/lint/groovy/groovy.mk
 
 # [EOF]

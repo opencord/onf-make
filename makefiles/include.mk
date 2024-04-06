@@ -65,6 +65,7 @@ include $(onf-mk-dir)/virtualenv/include.mk#  # python, lint, JJB dependency
 # include $(onf-mk-dir)/patches/include.mk#   # Patch when python 3.10+ in use
 
 include $(onf-mk-dir)/commands/include.mk   # Tools and local installers
+include $(onf-mk-dir)/npm/include.mk
 include $(onf-mk-dir)/lint/include.mk
 
 include $(onf-mk-dir)/gerrit/include.mk

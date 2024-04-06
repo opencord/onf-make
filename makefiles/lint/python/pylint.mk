@@ -46,19 +46,11 @@ endif# NO-LINT-PYLINT
 ## -----------------------------------------------------------------------
 ## Intent: exhaustive pylint syntax checking
 ## -----------------------------------------------------------------------
-
-# Construct: find . \( -name '__ignored__' -o -name dir -o name dir \)
-# pylint-find-filter := $(null)
-# pylint-find-filter += -name '__ignored__'#   # for alignment
-# pylint-find-filter += $(foreach dir,$(onf-excl-dirs),-o -name $(dir)))
-
-# pylint-find-filter := $(call gen-python-find-excl,onf-excl-dirs)
-# $(error pylint-find-filter := $(pylint-find-filter))
 lint-pylint-all: $(venv-activate-script)
+
 	$(MAKE) --no-print-directory lint-pylint-install
 
 	$(activate) && $(call gen-python-find-cmd) | $(xargs-n1) pylint
-#	    | $(xargs-n1-clean) yamllint --strict
 
 ## -----------------------------------------------------------------------
 ## Intent: check deps for format and python3 cleanliness

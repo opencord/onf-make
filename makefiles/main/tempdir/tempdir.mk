@@ -80,7 +80,7 @@ sterile-timestamp = $(shell date '+%Y-%m-%d' -d '3 days ago')
 sterile ::
 
     # Create a reference file to remove lingering stale directories
-	$(HELP)touch --date "$(sterile-timestamp)" "$(lf-mk-tmp-create)-stale"
+	$(HIDE)touch --date "$(sterile-timestamp)" "$(lf-mk-tmp-create)-stale"
 
 	$(HIDE)find '$(dir $(lf-mk-tmp))' -maxdepth 1 -name 'repo-LF-make*' -type d -print0 \
 	   | $(xargs-cmd0) -I'{}' find {} -name '.exists' -not -newer "$(lf-mk-tmp-create)-stale" -print0 \

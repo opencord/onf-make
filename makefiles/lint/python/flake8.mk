@@ -55,9 +55,6 @@ lint-flake8-all: $(venv-activate-script)
 	$(activate) && $(call gen-python-find-cmd) \
 	    | $(xargs-n1) flake8 --max-line-length=99 --count
 
-#  && find . \( $(flake8-find-filter) \) -prune -o -name '*.py' -print0 \
-# 	| $(xargs-n1) flake8 --max-line-length=99 --count
-
 ## -----------------------------------------------------------------------
 ## Intent: check deps for format and python3 cleanliness
 ## Note:

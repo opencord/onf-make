@@ -29,8 +29,9 @@ $(if $(DEBUG),$(warning ENTER))
 
 # Gather sources to check
 shell-check-find := find .
-shell-check-find += -name 'vendor' -prune
-shell-check-find += -o \( -name '*.sh' -o -name '*.bash' \)
+shell-check-find += $(foreach dir,$(onf-excl-dirs),-not -path './$(dir)/*')
+shell-check-find += -not -path './vendor/*'
+shell-check-find += -a \( -name '*.sh' -o -name '*.bash' \)
 shell-check-find += -type f -print0
 
 # shell-check    := $(env-clean) shellcheck

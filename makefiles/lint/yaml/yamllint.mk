@@ -33,6 +33,11 @@ YAML_FILES      ?= $(error YAML_FILES= is required)
 YAMLLINT = $(activate) && yamllint
 yamllint-args += --strict
 
+yaml-find-args := $(null)
+yaml-find-args += $(foreach dir,$(onf-excl-dirs),-not -path './$(dir)/*')
+yaml-find-args += -a \( -iname '*.yaml' -o -iname '*.yml' \)
+yaml-find-args += -print0
+
 ## -----------------------------------------------------------------------
 ## Intent: Use the yaml command to perform syntax checking.
 ## -----------------------------------------------------------------------
@@ -49,7 +54,8 @@ lint-yaml-all: lint-yaml-cmd-version
 
 	$(call banner-enter,Target $@)
 	$(HIDE)$(MAKE) --no-print-directory lint-yaml-install
-	$(HIDE)$(activate) && $(call gen-yaml-find-cmd) \
+
+	$(HIDE)$(activate) && find . $(yaml-find-args) \
 	    | $(env-clean) $(xargs-cmd) -I'{}' \
 		bash -c "$(YAMLLINT) $(yamllint-args) {}"
 	$(call banner-leave,Target $@)

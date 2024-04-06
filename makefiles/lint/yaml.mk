@@ -30,6 +30,10 @@ $(if $(DEBUG),$(warning ENTER))
 have-yaml-files := $(if $(strip $(YAML_FILES)),true)
 YAML_FILES      ?= $(error YAML_FILES= is required)
 
+# Gather sources to check
+yaml-find-args := find .
+yaml-find-args += $(foreach dir,$(onf-excl-dirs),-not -path './$(dir)/*')
+
 ## -----------------------------------------------------------------------
 ## Intent: Use the yaml command to perform syntax checking.
 ##   o If UNSTABLE=1 syntax check all sources
@@ -51,7 +55,7 @@ endif# NO-LINT-YAML
 lint-yaml-all:
 	$(HIDE)$(MAKE) --no-print-directory lint-yaml-install
 
-	find . \( -iname '*.yaml' -o -iname '*.yml' \) -print0 \
+	find . $(yaml-find-args) \( -iname '*.yaml' -o -iname '*.yml' \) -print0 \
 	    | $(xargs-n1-clean) yamllint --strict
 
 ## -----------------------------------------------------------------------

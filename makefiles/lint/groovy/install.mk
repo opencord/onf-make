@@ -17,38 +17,40 @@
 # SPDX-FileCopyrightText: 2022-2024 Open Networking Foundation Contributors
 # SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
-# Intent:
+# Intent: Install npm-groovy-lint for syntax checking
+# -----------------------------------------------------------------------
+# NOTES: Tool install dependency chain
+#    version : tool-install
+#    tool-install : npm-tool
+#    npm-tool     : npm-install
+#
+# % make npm-groovy-lint installs npm, node and npm-groovy-lint
 # -----------------------------------------------------------------------
 
-##-------------------##
-##---]  GLOBALS  [---##
-##-------------------##
-lint-groovy-cmds += $(shell which npm-groovy-lint)
-lint-groovy-cmds += $(HOME)/.npm/bin/npm-groovy-lint
-lint-groovy-cmds += /usr/bin/npm-groovy-lint
-# lint-groovy-cmds += /dev/null#                     # force existence
-
-lint-groovy-cmd = $(firstword $(wildcard $(lint-groovy-cmds)))
-
-##-------------------##
-##---]  TARGETS  [---##
-##-------------------##
-ifndef NO-LINT-GROOVY
-
-  lint : lint-groovy
-endif
+$(if $(DEBUG),$(warning ENTER))
 
 ## -----------------------------------------------------------------------
-## Intent: Install npm-groovy-lint
+## Intent: Display groovy command version string.
 ## -----------------------------------------------------------------------
-$(lint-groovy-cmd) : lint-groovy-install
-lint-groovy-install:
+.PHONY: lint-groovy-version
+lint-groovy-version : $(lint-groovy-cmd)
+	@echo
+	$(activate-npm) && "$<" --version
 
 ## -----------------------------------------------------------------------
-## Intent: Display command help
+## Intent: On-demand instalation of the groovy command
 ## -----------------------------------------------------------------------
-help-summary ::
-	@echo '  lint-groovy-install          Syntax check groovy sources'
+.PHONY: lint-groovy-install
+lint-groovy-install : $(lint-groovy-cmd)
+
+## -----------------------------------------------------------------------
+## Intent: Display command usage
+## -----------------------------------------------------------------------
+lint-groovy-help ::
+	@echo
+	@printf '  %-33.33s %s\n' 'lint-groovy-version' 'Display lint tool version'
+	@printf '  %-33.33s %s\n' 'lint-groovy-install' 'Install lint tool'
+
+	@$(MAKE) --no-print-directory npm-help
 
 # [EOF]
-

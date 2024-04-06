@@ -1,6 +1,6 @@
 # -*- makefile -*-
 # -----------------------------------------------------------------------
-# Copyright 2022-2024 Open Networking Foundation Contributors
+# Copyright 2017-2024 Open Networking Foundation Contributors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,45 +14,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # -----------------------------------------------------------------------
-# SPDX-FileCopyrightText: 2022-2024 Open Networking Foundation Contributors
+# SPDX-FileCopyrightText: 2017-2024 Open Networking Foundation Contributors
 # SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
-# Intent:
-# -----------------------------------------------------------------------
 
-##-------------------##
-##---]  GLOBALS  [---##
-##-------------------##
-
-# Gather sources to check
-# TODO: implement deps, only check modified files
-python-check-find := find . -name '*venv*' -prune\
-  -o \( -name '*.py' \)\
-  -type f -print0
-
-# python-check    := $(env-clean) pylint
-python-check    := pylint
-
-# python-check-args += --dry-run
-
-##-------------------##
-##---]  TARGETS  [---##
-##-------------------##
-ifndef NO-LINT-PYTHON
-  lint : lint-python
-endif
+$(if $(DEBUG),$(warning ENTER))
 
 ## -----------------------------------------------------------------------
-## Intent: Perform a lint check on makefile sources
-## -----------------------------------------------------------------------
-lint-python:
-	$(HIDE)$(env-clean) $(python-check-find) \
-	    | $(xargs-n1) $(python-check) $(python-check-args)
-
-## -----------------------------------------------------------------------
-## Intent: Display command help
+## Intent: Display topic help
 ## -----------------------------------------------------------------------
 help-summary ::
-	@echo '  lint-python         Syntax check python sources (*.py)'
+	@printf '  %-33.33s %s\n' 'lint-groovy'      'Syntax check sources'
+	@printf '  %-33.33s %s\n' 'lint-groovy-help' 'Extended target help'
+
+## -----------------------------------------------------------------------
+## Intent: Display extended topic help
+## -----------------------------------------------------------------------
+.PHONY: lint-groovy-help
+lint-groovy-help ::
+	@printf '  %-33.33s %s\n' 'lint-groovy-all' 'Lint all available sources'
+	@printf '  %-33.33s %s\n' 'lint-groovy-mod' 'Lint locally modified (git status)'
+	@printf '  %-33.33s %s\n' 'lint-groovy-src' 'Lint individually (GROOVY_SRC=...)'
+
+$(if $(DEBUG),$(warning LEAVE))
 
 # [EOF]

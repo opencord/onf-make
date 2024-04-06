@@ -1,6 +1,6 @@
 # -*- makefile -*-
 # -----------------------------------------------------------------------
-# Copyright 2023-2024 Open Networking Foundation Contributors
+# Copyright 2022-2024 Open Networking Foundation Contributors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,27 +14,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # -----------------------------------------------------------------------
-# SPDX-FileCopyrightText: 2023-2024 Open Networking Foundation Contributors
+# SPDX-FileCopyrightText: 2022-2024 Open Networking Foundation Contributors
 # SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
 # Intent:
-#   o Construct a find command able to gather python files with filtering.
-#   o Used by library makefiles flake8.mk and pylint.mk for iteration.
 # -----------------------------------------------------------------------
 
-## -----------------------------------------------------------------------
-## Intent: Construct a find command to gather a list of python files
-##         with exclusions.
-## -----------------------------------------------------------------------
-## Usage:
-#	$(activate) & $(call gen-python-find-cmd) | $(args-n1) pylint
-## -----------------------------------------------------------------------
-gen-python-find-cmd = \
-  $(strip \
-    find . \
-	  $(foreach dir,$(onf-excl-dirs),-not -path './$(dir)/*') \
-      -a -name '*.py' \
-      -print0 \
-  )
+$(if $(DEBUG),$(warning ENTER))
+
+lint-groovy-cmd := $(call node-get-tool-path,npm-groovy-lint)
+
+# lint-groovy-conf := $(call path-by-makefile,.groovylintrc.json)
+lint-groovy-conf := $(onf-mk-dir)/lint/groovy/.groovylintrc.json
+
+lint-groovy-args := $(null)
+lint-groovy-args += --config $(lint-groovy-conf)
+
+
+# lint-groovy-args += --loglevel info
+# lint-groovy-args += --ignorepattern
+# lint-groovy-args += --verbose
 
 # [EOF]
+

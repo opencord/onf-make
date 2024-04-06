@@ -27,8 +27,10 @@ xargs-n1-local := $(subst -t,$(null),$(xargs-n1))#   inhibit cmd display
 
 # Gather sources to check
 # TODO: implement deps, only check modified files
-make-check-find := find . -name 'vendor' -prune
-make-check-find += -o \( -iname makefile -o -name '*.mk' \)
+make-check-find := find .
+# -name 'vendor' -prune
+make-check-find += $(foreach dir,$(onf-excl-dirs),-not -path './$(dir)/*')
+make-check-find += -a \( -iname makefile -o -name '*.mk' \)
 make-check-find += -type f -print0
 
 make-check      := $(MAKE)

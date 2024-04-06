@@ -47,12 +47,13 @@ endif# NO-LINT-JSON
 ## Intent: exhaustive json syntax checking
 ## -----------------------------------------------------------------------
 json-find-args := $(null)
-json-find-args += -name '$(venv-name)'
+json-find-args += $(foreach dir,$(onf-excl-dirs),-not -path './$(dir)/*')
+
 lint-json-all:	
 	$(HIDE)$(MAKE) --no-print-directory lint-json-install
 
 	$(activate)\
- && find . \( $(json-find-args) \) -prune -o -name '*.json' -print0 \
+ && find . $(json-find-args) -name '*.json' -print0 \
 	| $(xargs-n1) python -m json.tool > /dev/null ;\
 
 ## -----------------------------------------------------------------------
