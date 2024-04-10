@@ -6,7 +6,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-# http:#www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,7 +17,8 @@
 # SPDX-FileCopyrightText: 2017-2024 Open Networking Foundation Contributors
 # SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
-# Intent:
+# Intent: This makefile maintains file and directory exclusion lists
+#         for doc8 linting.
 # -----------------------------------------------------------------------
 
 $(if $(DEBUG),$(warning ENTER))
@@ -28,6 +29,7 @@ $(if $(DEBUG),$(warning ENTER))
 lint-doc8-excl-raw += '*/.git'
 lint-doc8-excl-raw += '$(venv-name)'
 lint-doc8-excl-raw += '*/$(venv-name)'
+lint-doc8-excl-raw += './lf/onf-make'
 lint-doc8-excl-raw += 'LICENSES/'
 
 # Should we filter generated content as redundant ?
@@ -43,7 +45,7 @@ $(if $(BUILDDIR),\
 #   o [TODO] Ignore submodules, individual repos should check their sources.
 # -----------------------------------------------------------------------
 lint-doc8-excl-raw += '*/venv_*'#   # '*/venv_cord'
-lint-doc8-excl-raw += '*/*_cord'#   # '*/vst_venv'
+lint-doc8-excl-raw += '*/*_venv'#   # '*/vst_venv'
 
 ## -----------------------------------------------------------------------
 ## repo:voltha-docs exclusions
