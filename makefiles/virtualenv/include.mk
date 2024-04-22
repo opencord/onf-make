@@ -61,8 +61,8 @@ venv-activate-script := $(venv-activate-bin)/activate#    # dependency
 ##--------------------##
 ##---]  INCLUDES  [---##
 ##--------------------##
-include $(ONF_MAKEDIR)/virtualenv/requirements-txt.mk
-include $(ONF_MAKEDIR)/virtualenv/version.mk
+include $(onf-mk-dir)/virtualenv/requirements-txt.mk
+include $(onf-mk-dir)/virtualenv/version.mk
 
 # ------------------------------------------------------------------------
 # Intent: Define macro activate= to access virtualenv activation script.
@@ -110,7 +110,7 @@ venv-activate-patched := $(venv-activate-script).patched
 venv-activate-patched : $(venv-activate-patched)
 $(venv-activate-patched) : $(venv-activate-script)
 	$(call banner-enter,Target $@)
-	$(ONF_MAKEDIR)/virtualenv/python_310_migration.sh
+	$(onf-mk-dir)/virtualenv/python_310_migration.sh
 	touch $@
 	$(call banner-leave,Target $@)
 
