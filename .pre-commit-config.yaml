@@ -3,6 +3,9 @@
 # -----------------------------------------------------------------------
 # [NOTE] - Propogate .pre-commit-config.yaml edits to all repositories!
 # -----------------------------------------------------------------------
+# [NOTE] - Common config file source lives in repo:onf-make
+#    - https://gerrit.opencord.org/plugins/gitiles/onf-make/+/refs/heads/master/.pre-commit-config.yaml
+# -----------------------------------------------------------------------
 # [TODO]
 #    - pre-commit yaml config exists individually within repositories.
 #    - Generally lint config and benavior is consistent for all repos.

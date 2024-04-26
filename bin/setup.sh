@@ -1,7 +1,6 @@
 #!/bin/bash
-# -*- makefile -*-
 # -----------------------------------------------------------------------
-# Copyright 2023 Open Networking Foundation (ONF) and the ONF Contributors
+# Copyright 2023-2024 Open Networking Foundation Contributors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # -----------------------------------------------------------------------
-# SPDX-FileCopyrightText: 2023 Open Networking Foundation (ONF) and the ONF Contributors
+# SPDX-FileCopyrightText: 2023-2024 Open Networking Foundation Contributors
 # SPDX-License-Identifier: Apache-2.0
 # -----------------------------------------------------------------------
 ## Intent: This script will update a repository makefiles/ directory
@@ -28,6 +27,25 @@
 ##-------------------##
 set -euo pipefail
 # declare -g -i debug=1
+
+## -----------------------------------------------------------------------
+## Intent: Parse command line paths
+## -----------------------------------------------------------------------
+function program_paths()
+{
+    declare -g pgm="$(readlink --canonicalize-existing "$0")"
+    declare -g pgmbin="${pgm%/*}"
+    declare -g pgmroot="${pgmbin%/*}"
+    declare -g pgmname="${pgm%%*/}"
+
+    readonly pgm
+    readonly pgmbin
+    readonly pgmroot
+    readonly pgmname
+
+    return
+}
+program_paths
 
 ## -----------------------------------------------------------------------
 ## Intent: Display a message with formatting
@@ -52,131 +70,45 @@ function error()
     exit 1
 }
 
-## -----------------------------------------------------------------------
-## Intent: Archive current directory before we begin
-## -----------------------------------------------------------------------
-function archive_sandbox()
-{
-	local abs="$(realpath --canonicalize-existing '.')"
-	local dir="${abs##*/}"
-	local ts="$(date '+%Y%m%d%H%M%S')"
-	local prefix="../${dir}-all/backups"
-
-	banner "Archive current directory ($dir)"
-
-#	make sterile >/dev/null # nuke lingering .venv/ installs
-#	make clean-all >/dev/null # nuke lingering .venv/ installs
-
-	declare -a targs=()
-	targs+=('--create')
-
-    ## Set archive compression level
-	local compress='bzip2'
-	local ext
-	case "$compress" in
-	  bzip2) targs+=('--bzip2'); ext='bz2' ;;
-	  gzip) targs+=('--gzip'); ext='tgz' ;;
-	  zstd) targs+=('--zstd'); ext='zst' ;;
-	*) error "Detected invalid compression [$compress]" ;;
-	esac
-
-	local out="${prefix}/${ts}.${ext}"
-
-	targs+=('--file' "$out")
-
-	mkdir -p "$prefix"
-	tar "${targs[@]}" '.'
-	/bin/ls -l "$out"
-	return
-}	
-
-## -----------------------------------------------------------------------
-## Intent: Install feature enabling makefile.
-## -----------------------------------------------------------------------
-function install_config_mk
-{
-	local dst='makefiles/config.mk'
-	if [[ -f "$dst" ]]; then
-		:
-	elif [[ -f 'config.mk' ]]; then
-		git mv config.mk "$dst"
-	else
-		rsync -v --checksum makefiles/onf-lib/config.mk "$dst"
-	fi
-
-	return
-}
-
-## -----------------------------------------------------------------------
-## Intent: Re-home existing local makefiles/ into makefiles/local
-## -----------------------------------------------------------------------
-function patch_detection()
-{
-	[[ ! -d makefiles ]] && return
-
-    ## Migration patches should be simple and plentiful.
-	if [[ ! -d makefiles-orig ]]; then
-	    cat <<EOM
-
-* -----------------------------------------------------------------------
-* Replacing a repository makefile directory is deployed
-* by creating a few independent patches.
-* -----------------------------------------------------------------------
-  1) Rename the repository-specific makefiles directory.
-  1a) git mv makefiles makefiles-orig
-  1b) Update Makefile to "include makefiles-orig"
-
-  2) Create makefiles/
-  2a) add repo:onf-make as a submodule.
-  2b) create makefiles/local/
-  2c) relocate config files
-
-  3) Update Makefile to include makefiles/include.mk
-
-EOM
-		exit 1
-	fi
-	return
-}
-
 ##----------------##
 ##---]  MAIN  [---##
 ##----------------##
+
+# shellcheck disable=SC2034
 while [[ $# -gt 0 ]]; do
-	arg=$1; shift
-	case "$arg" in
-	  debug) declare -g -i debug=1 ;;
-	  *) error "Detected invalid switch [$arg]" ;;
-	esac
+    arg=$1; shift
+    case "$arg" in
+        debug) declare -g -i debug=1 ;;
+        *) error "Detected invalid switch [$arg]" ;;
+    esac
 done
 
-## Avoid trashing a work-in-progress
-path='makefiles/local/include.mk'
-[[ -e "$path" ]] && { error "Detected upgrade path: $path"; }
+cp "$pgmroot/.pre-commit-config.yaml" .
 
-archive_sandbox
-patch_detection
-
-mkdir -p makefiles
-pushd makefiles || { error 'pushd makefiles failed'; }
+mkdir -p lf
+pushd lf || { error 'pushd makefiles failed'; }
 
 banner 'Adding repo:onf-make (library makefiles) as a submodule'
-git submodule add 'https://github.com/opencord/onf-make.git' onf-lib
+git submodule add 'https://github.com/opencord/onf-make.git' onf-make
+# git checkout 1.0.0
+# git submodule update --remote --merge
+git submodule update --remote --recursive
 
 banner 'Install library/local loader include.mk'
-rsync -v --checksum onf-lib/makefiles_include_mk.ex include.mk
+rsync -v --checksum "${pgmroot}/install/"* .
+
 
 banner 'Create project specific directory makefiles/local'
 mkdir -p local
 touch local/include.mk
 
-popd || { error 'popd makefiles failed'; }
+popd || { error 'popd lf makefiles failed'; }
 
 banner 'Prep work for pending checkin'
-git add makefiles/include.mk
-git add makefiles/local/include.mk
-install_config_mk
-git add makefiles
+git add lf
+
+[[ -f 'config.mk' ]] && { git mv 'config.mk' 'lf'; }
+git add lf
 git status
 
 # [EOF]
