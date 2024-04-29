@@ -24,7 +24,7 @@
 $(if $(DEBUG),$(warning ENTER))
 
 # Special snowflake: repository-dependent test target
--include $(ONF_MAKEDIR)/targets/test/$(--repo-name--).mk
+-include $(onf-mk-dir)/targets/test/$(--repo-name--).mk
 
 $(if $(DEBUG),$(warning LEAVE))
 

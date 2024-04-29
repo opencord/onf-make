@@ -35,10 +35,10 @@ GIT	?= /usr/bin/env git
 ##--------------------##
 ##---]  INCLUDES  [---##
 ##--------------------##
-include $(ONF_MAKEDIR)/release/voltha-versions.mk
-include $(ONF_MAKEDIR)/release/targets/voltha-certification.mk
-include $(ONF_MAKEDIR)/release/targets/voltha-e2e.mk
-include $(ONF_MAKEDIR)/release/targets/voltha-nightly-jobs.mk
+include $(onf-mk-dir)/release/voltha-versions.mk
+include $(onf-mk-dir)/release/targets/voltha-certification.mk
+include $(onf-mk-dir)/release/targets/voltha-e2e.mk
+include $(onf-mk-dir)/release/targets/voltha-nightly-jobs.mk
 
 # last-release  := voltha-2.11
 last-release := $(voltha-release-last)

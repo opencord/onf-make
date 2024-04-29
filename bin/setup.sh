@@ -33,7 +33,8 @@ set -euo pipefail
 ## -----------------------------------------------------------------------
 function program_paths()
 {
-    declare -g pgm="$(readlink --canonicalize-existing "$0")"
+    declare -g pgm
+    pgm="$(readlink --canonicalize-existing "$0")"
     declare -g pgmbin="${pgm%/*}"
     declare -g pgmroot="${pgmbin%/*}"
     declare -g pgmname="${pgm%%*/}"
@@ -41,6 +42,8 @@ function program_paths()
     readonly pgm
     readonly pgmbin
     readonly pgmroot
+
+    # shellcheck disable=SC2034
     readonly pgmname
 
     return

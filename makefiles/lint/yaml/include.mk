@@ -27,16 +27,16 @@ $(if $(DEBUG),$(warning ENTER))
 ##--------------------##
 ##---]  INCLUDES  [---##
 ##--------------------##
-include $(ONF_MAKEDIR)/lint/yaml/help.mk
-# include $(ONF_MAKEDIR)/lint/yaml/find_utils.mk
-include $(ONF_MAKEDIR)/lint/yaml/install.mk
+include $(onf-mk-dir)/lint/yaml/help.mk
+# include $(onf-mk-dir)/lint/yaml/find_utils.mk
+include $(onf-mk-dir)/lint/yaml/install.mk
 
 # [TODO] Consolidate and refactor to support a simpler answer
 # Special snowflake linting requirements
--include $(ONF_MAKEDIR)/lint/yaml/byrepo/$(--repo-name--)/include.mk
+-include $(onf-mk-dir)/lint/yaml/byrepo/$(--repo-name--)/include.mk
 
 # Standard lint-yaml targets
-include $(ONF_MAKEDIR)/lint/yaml/yamllint.mk
+include $(onf-mk-dir)/lint/yaml/yamllint.mk
 
 --onf-mk-lint-yaml-- := true#        # Flag to inhibit re-including
 

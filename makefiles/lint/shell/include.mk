@@ -25,9 +25,9 @@ $(if $(DEBUG),$(warning ENTER))
 ##--------------------##
 ##---]  INCLUDES  [---##
 ##--------------------##
-include $(ONF_MAKEDIR)/lint/shell/help.mk
-include $(ONF_MAKEDIR)/lint/shell/install.mk
-include $(ONF_MAKEDIR)/lint/shell/shellcheck.mk
+include $(onf-mk-dir)/lint/shell/help.mk
+include $(onf-mk-dir)/lint/shell/install.mk
+include $(onf-mk-dir)/lint/shell/shellcheck.mk
 
 $(if $(DEBUG),$(warning LEAVE))
 

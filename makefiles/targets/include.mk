@@ -26,10 +26,10 @@ $(if $(DEBUG),$(warning ENTER))
 ##-------------------##
 ##---]  TARGETS  [---##
 ##-------------------##
-include $(ONF_MAKEDIR)/targets/clean.mk
-include $(ONF_MAKEDIR)/targets/check.mk
-include $(ONF_MAKEDIR)/targets/sterile.mk
-include $(ONF_MAKEDIR)/targets/test/include.mk
+include $(onf-mk-dir)/targets/clean.mk
+include $(onf-mk-dir)/targets/check.mk
+include $(onf-mk-dir)/targets/sterile.mk
+include $(onf-mk-dir)/targets/test/include.mk
 
 $(if $(DEBUG),$(warning LEAVE))
 

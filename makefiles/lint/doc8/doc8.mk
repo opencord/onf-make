@@ -38,7 +38,7 @@ DOC8_SOURCE     ?= $(error DOC8_SOURCE= is required)
 # doc8 config as command line args so local makefiles to use --config
 # -----------------------------------------------------------------------
 ifdef USE_DOC8_INI
-  lint-doc8-args += --config $(ONF_MAKEDIR)/lint/doc8/doc8.ini
+  lint-doc8-args += --config $(onf-mk-dir)/lint/doc8/doc8.ini
 endif
 
 ## -----------------------------------------------------------------------

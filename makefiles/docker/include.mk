@@ -23,7 +23,7 @@
 $(if $(DEBUG),$(warning ENTER))
 
 # Per-repository
-include $(ONF_MAKEDIR)/docker/config/$(--repo-name--).mk
+include $(onf-mk-dir)/docker/config/$(--repo-name--).mk
 
 # ------------------- ##
 # ---]  GLOBALS  [--- ##

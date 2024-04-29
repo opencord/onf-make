@@ -32,7 +32,7 @@
 # NO-LINT-GROOVY    := true#               # Note[1]
 # NO-LINT-JJB       := true#               # Note[2]
 # NO-LINT-JSON      := true#               # Note[1]
-# NO-LINT-MAKEFILE  := true#               # Note[1]
+NO-LINT-MAKEFILE  := true#               # Note[1]
 # NO-LINT-REUSE     := true                # License check
 # NO-LINT-ROBOT     := true
 # NO-LINT-SHELL     := true#               # Note[1]

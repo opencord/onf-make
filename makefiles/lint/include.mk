@@ -30,18 +30,18 @@ ifdef NO-LINT-PYTHON
   NO-LINT-PYLINT := true
 endif
 
-include $(ONF_MAKEDIR)/lint/doc8/include.mk
-include $(ONF_MAKEDIR)/lint/golang/include.mk
-include $(ONF_MAKEDIR)/lint/groovy/include.mk
-include $(ONF_MAKEDIR)/lint/jjb.mk
-include $(ONF_MAKEDIR)/lint/json.mk
-include $(ONF_MAKEDIR)/lint/license/include.mk
-include $(ONF_MAKEDIR)/lint/make/include.mk
-include $(ONF_MAKEDIR)/lint/python/include.mk
-include $(ONF_MAKEDIR)/lint/shell/include.mk
-include $(ONF_MAKEDIR)/lint/yaml/include.mk
+include $(onf-mk-dir)/lint/doc8/include.mk
+include $(onf-mk-dir)/lint/golang/include.mk
+include $(onf-mk-dir)/lint/groovy/include.mk
+include $(onf-mk-dir)/lint/jjb.mk
+include $(onf-mk-dir)/lint/json.mk
+include $(onf-mk-dir)/lint/license/include.mk
+include $(onf-mk-dir)/lint/make/include.mk
+include $(onf-mk-dir)/lint/python/include.mk
+include $(onf-mk-dir)/lint/shell/include.mk
+include $(onf-mk-dir)/lint/yaml/include.mk
 
-include $(ONF_MAKEDIR)/lint/help.mk
+include $(onf-mk-dir)/lint/help.mk
 
 $(if $(DEBUG),$(warning LEAVE))
 

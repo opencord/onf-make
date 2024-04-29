@@ -26,9 +26,9 @@
 ##--------------------##
 ##---]  INCLUDES  [---##
 ##--------------------##
-include $(ONF_MAKEDIR)/lint/robot/robot.mk
-# include $(ONF_MAKEDIR)/lint/robot/excl.mk
-include $(ONF_MAKEDIR)/lint/robot/help.mk
-include $(ONF_MAKEDIR)/lint/robot/install.mk
+include $(onf-mk-dir)/lint/robot/robot.mk
+# include $(onf-mk-dir)/lint/robot/excl.mk
+include $(onf-mk-dir)/lint/robot/help.mk
+include $(onf-mk-dir)/lint/robot/install.mk
 
 # [EOF]

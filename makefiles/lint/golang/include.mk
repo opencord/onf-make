@@ -20,7 +20,7 @@
 
 $(if $(DEBUG),$(warning ENTER))
 
-include $(ONF_MAKEDIR)/lint/golang/sca.mk
+include $(onf-mk-dir)/lint/golang/sca.mk
 
 $(if $(DEBUG),$(warning LEAVE))
 

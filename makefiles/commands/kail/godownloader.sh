@@ -56,6 +56,7 @@ parse_args() {
   shift $((OPTIND - 1))
   TAG=$1
 }
+
 # this function wraps all the destructive operations
 # if a curl|bash cuts off the end of the script due to
 # network, either nothing will happen or will syntax error
@@ -139,16 +140,20 @@ https://github.com/client9/shlib/blob/master/LICENSE.md
 but credit (and pull requests) appreciated.
 ------------------------------------------------------------------------
 EOF
+
 is_command() {
   command -v "$1" >/dev/null
 }
 echoerr() {
   echo "$@" 1>&2
 }
+
 log_prefix() {
+    # shellcheck disable=SC2317
   echo "$0"
 }
 _logp=6
+
 log_set_priority() {
   _logp="$1"
 }
@@ -207,7 +212,7 @@ uname_arch() {
     armv6*) arch="armv6" ;;
     armv7*) arch="armv7" ;;
   esac
-  echo ${arch}
+  echo "${arch}"
 }
 uname_os_check() {
   os=$(uname_os)

@@ -20,7 +20,7 @@
 
 $(if $(DEBUG),$(warning ENTER))
 
-include $(ONF_MAKEDIR)/etc/features.mk
+include $(onf-mk-dir)/etc/features.mk
 
 $(if $(DEBUG),$(warning LEAVE))
 

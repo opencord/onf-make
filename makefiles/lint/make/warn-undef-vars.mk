@@ -26,7 +26,9 @@ $(if $(DEBUG),$(warning ENTER))
 ##   o Definitions only exist for lint target use.
 ##   o Decrease warning volume until undef sources can be cleaned up.
 ## -----------------------------------------------------------------------
-$(if $(findstring --warn-undefined-variables,$(MAKEFLAGS)),\
+$(if $(findstring $(MAKEFLAGS),--warn-undefined-variables),\
+	$(eval IS-WARN-UNDEFINED-VARIABLES := true))
+$(if $(findstring $(MAKECMDGOALS),int lint-make),\
 	$(eval IS-WARN-UNDEFINED-VARIABLES := true))
 
 ifdef IS-WARN-UNDEFINED-VARIABLES
@@ -63,6 +65,13 @@ ifdef IS-WARN-UNDEFINED-VARIABLES
   # ------------------------------------------------------------------
   $(call define-if-undef,DOC8_SOURCE)
   $(call define-if-undef,have-python-files)
+
+  $(call define-if-undef,DEBUG-onf-mk-paths)
+  $(call define-if-undef,LINT_DOC8_DEBUG)
+
+  $(call define-if-undef,lint-shell-all)
+  $(call define-if-undef,lint-shell-mod)
+  $(call define-if-undef,lint-shell-src)
 
 endif # IS-WARN-UNDEFINED-VARIABLES
 

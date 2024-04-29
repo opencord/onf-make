@@ -28,9 +28,9 @@ REUSE ?= $(venv-activate-bin)/reuse
 ##--------------------##
 ##---]  INCLUDES  [---##
 ##--------------------##
-include $(ONF_MAKEDIR)/lint/license/help.mk
-include $(ONF_MAKEDIR)/lint/license/install.mk
-include $(ONF_MAKEDIR)/lint/license/reuse.mk
+include $(onf-mk-dir)/lint/license/help.mk
+include $(onf-mk-dir)/lint/license/install.mk
+include $(onf-mk-dir)/lint/license/reuse.mk
 
 # Alias targets
 lint-license     : lint-reuse

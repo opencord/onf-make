@@ -24,9 +24,9 @@
 $(if $(DEBUG),$(warning ENTER))
 
 ## Bleeding early import handled by makefiles/include.mk
-# include $(ONF_MAKEDIR)/lint/make/warn-undef-vars.mk
+# include $(onf-mk-dir)/lint/make/warn-undef-vars.mk
 
-include $(ONF_MAKEDIR)/lint/make/makefile.mk
+include $(onf-mk-dir)/lint/make/makefile.mk
 
 $(if $(DEBUG),$(warning LEAVE))
 
