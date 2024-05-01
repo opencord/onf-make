@@ -2,7 +2,7 @@
 # -----------------------------------------------------------------------
 # Copyright 2017-2024 Open Networking Foundation (ONF) and the ONF Contributors
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
+# Licensed unde the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
@@ -50,9 +50,12 @@ local-mk-dir  := $(dir $(onf-mk-dir))local
 
 ONF_MAKEDIR   := $(onf-mk-dir)#   # TODO: Deprecate ONF_MAKEDIR and MAKEDIR
 
-#--------------------##
+##--------------------##
 ##---]  INCLUDES  [---##
 ##--------------------##
+
+include $(onf-mk-dir)/detect/include.mk     # Dynamic features based on source
+
 include $(onf-mk-dir)/lint/make/warn-undef-vars.mk  # target lint-make helper
 
 include $(onf-mk-dir)/consts.mk

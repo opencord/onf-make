@@ -30,6 +30,8 @@ onf-mk-abs    ?= $(abspath $(lastword $(MAKEFILE_LIST)))
 onf-mk-top    := $(dir $(onf-mk-abs))
 onf-mk-top    := $(patsubst %/,%,$(onf-mk-top))
 
+onf-mk-dir    := $(onf-mk-top)/makefiles
+
 ##-------------------##
 ##---]  GLOBALS  [---##
 ##-------------------##
@@ -39,7 +41,7 @@ TOP         ?= .
 ##---]  INCLUDES  [---##
 ##--------------------##
 include config.mk
-include $(onf-mk-top)/makefiles/include.mk
+include $(onf-mk-dir)/include.mk
 
 ## -----------------------------------------------------------------------
 ## Intent: Helper target for interactive README.md viewing
