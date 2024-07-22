@@ -50,10 +50,16 @@ local-mk-dir  := $(dir $(onf-mk-dir))local
 
 ONF_MAKEDIR   := $(onf-mk-dir)#   # TODO: Deprecate ONF_MAKEDIR and MAKEDIR
 
+##-------------------------##
+##---]  CORE INCLUDES  [---##
+##-------------------------##
+# no external dependencies.
+# wrap with a guard macro (include-once) to prevent re-sourcing.
+$(call include-once,$(onf-mk-dir)/etc/features.mk)
+
 ##--------------------##
 ##---]  INCLUDES  [---##
 ##--------------------##
-
 include $(onf-mk-dir)/detect/include.mk     # Dynamic features based on source
 
 include $(onf-mk-dir)/lint/make/warn-undef-vars.mk  # target lint-make helper
