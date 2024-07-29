@@ -54,7 +54,7 @@ $(venv-activate-script) :
 	$(call banner-enter,(virtualenv -p python))
 	virtualenv -p python3 $(venv-name)
 	$(activate) && python -m pip install --upgrade pip
-	$(activate) && pip install --upgrade setuptools
+	$(activate) && pip install --upgrade setuptools wheel
 
 	@$(MAKE) --no-print-directory venv-requirements venv-version
 	$(call banner-leave,(virtualenv -t python))
@@ -69,7 +69,7 @@ $(venv-activate-script) :
 
 $(venv-requirements-txt) : requirements.txt
 
-	$(activate) && python -m pip install -r requirements.txt
+	$(activate) && python --no-cache-dir -m pip install -r requirements.txt
 	@mkdir -p $(dir $@)
 	@touch $@
 
@@ -91,7 +91,7 @@ $(venv-activate-script)-orig :
 	@echo "============================="
 	virtualenv -p python3 $(venv-name)
 	$(activate) && python -m pip install --upgrade pip
-	$(activate) && pip install --upgrade setuptools
+	$(activate) && pip install --upgrade setuptools wheel
 	$(activate) && [[ -r requirements.txt ]] \
 	    && { python -m pip install -r requirements.txt; } \
 	    || { /bin/true; }
