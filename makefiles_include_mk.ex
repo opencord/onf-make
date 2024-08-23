@@ -1,6 +1,6 @@
 # -*- makefile -*-
 # -----------------------------------------------------------------------
-# Copyright 2023 Open Networking Foundation (ONF) and the ONF Contributors
+# Copyright 2023-2024 Open Networking Foundation Contributors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,11 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# SPDX-FileCopyrightText: 2023 Open Networking Foundation (ONF) and the ONF Contributors
+# SPDX-FileCopyrightText: 2023 Open Networking Foundation Contributors
 # SPDX-License-Identifier: Apache-2.0
-# -----------------------------------------------------------------------
-# https://gerrit.opencord.org/plugins/gitiles/onf-make
-# ONF.makefile.version = 1.0
 # -----------------------------------------------------------------------
 # Setup:
 #   1) Makefile
@@ -32,21 +29,41 @@
 $(if $(DEBUG),$(warning ENTER))
 
 ## -----------------------------------------------------------------------
+## Infer path to cloned sandbox root
+## [TODO] Deprecate TOP=
+## -----------------------------------------------------------------------
+lf-sbx-root   := $(abspath $(lastword $(MAKEFILE_LIST)))
+lf-sbx-root   := $(subst /lf/include.mk,$(null),$(lf-sbx-root))
+
+## -----------------------------------------------------------------------
 ## Define vars based on relative import (normalize symlinks)
 ## Usage: include makefiles/onf/include.mk
 ## -----------------------------------------------------------------------
 onf-mk-abs    := $(abspath $(lastword $(MAKEFILE_LIST)))
 onf-mk-top    := $(subst /include.mk,$(null),$(onf-mk-abs))
-onf-mk-lib    := $(onf-mk-top)/onf-lib/makefiles
+onf-mk-lib    := $(onf-mk-top)/onf-make/makefiles
 onf-mk-loc    := $(onf-mk-top)/local
 
 TOP           ?= $(patsubst %/makefiles/include.mk,%,$(onf-mk-abs))
+
+## -----------------------------------------------------------------------
+## This variable is a bridge to help transition away from legacy makefiles.
+## -----------------------------------------------------------------------
+legacy-mk     := $(lf-sbx-root)/makefiles
 
 ## ------------------------------------------------------
 ## Two distinct vars needed to access library or project
 ## ------------------------------------------------------
 ONF_MAKEDIR ?= $(onf-mk-lib)
 MAKEDIR     ?= $(onf-mk-loc)
+
+# -----------------------------------------------------------------------
+# Load per-repository conditionals
+# Load late else alter MAKEFILE_LIST
+# NOTE: config.mk can be removed if dynamic feature detection by
+#       file extension is added.
+# -----------------------------------------------------------------------
+include $(wildcard $(lf-sbx-root)/config.mk $(lf-sbx-root)/lf/config.mk)
 
 ## -----------------------------------------------------------------------
 ## Load makefiles in order:
@@ -55,6 +72,9 @@ MAKEDIR     ?= $(onf-mk-loc)
 ## -----------------------------------------------------------------------
 include $(onf-mk-lib)/include.mk
 include $(onf-mk-loc)/include.mk
+
+## Define late so caller (?- env --ignore-environment -?)
+GIT ?= /usr/bin/env git
 
 ## -----------------------------------------------------------------------
 ## Intent: Helper targets for maintaining git-submodules (repo:onf-make)
@@ -74,8 +94,9 @@ $(onf-mk-lib):
 ##         version available from the remote repository.  Subsequently
 ##         a checkin will be needed to make the submodule update permanent.
 ## -----------------------------------------------------------------------
-update-submodules:
-	git submodule foreach git pull
+.PHONY: update-git-submodules
+update-git-submodules:
+	$(GIT) submodule foreach git pull
 
 ## -----------------------------------------------------------------------
 ## Intent: On-demand cloning of git submodule(s).
@@ -85,12 +106,24 @@ update-submodules:
 ##     repo:onf-make submodule, this target/dependency will initialize
 ##     and checkout all submodules the current repository depends on.
 ## -----------------------------------------------------------------------
+.PHONY: git-submodules
+git-submodules : $(onf-mk-lib)/include.mk
+
 $(onf-mk-lib)/include.mk:
-	@echo
-	@echo "** Checkout git submodule(s)"
-	@echo "** -----------------------------------------------------------------------"
-	git submodule update --init --recursive
-	@echo "** -----------------------------------------------------------------------"
+
+	$(call banner-enter,(Checkout git submodules))
+
+	$(GIT) submodule update --init --recursive
+
+	$(call banner-leave,(Checkout git submodules))
+
+## -----------------------------------------------------------------------
+## -----------------------------------------------------------------------
+help-git :
+	@printf '  %-33.33s %s\n' 'git-submodules' \
+	  'Init and recursive checkout of git submodule(s)'
+	@printf '  %-33.33s %s\n' 'update-git-submodules' \
+	  'Update git submodule(s) to the latest version'
 
 $(if $(DEBUG),$(warning LEAVE))
 
