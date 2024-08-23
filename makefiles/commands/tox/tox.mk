@@ -28,7 +28,7 @@ tox-args += $(addprefix -e$(space),$(tox-python-versions))
 ## -----------------------------------------------------------------------
 ## Intent: Invoke the tox command
 ## -----------------------------------------------------------------------
-tox run-tox : tox-version
+tox run-tox tox-run : tox-version
 	$(activate) && tox $(tox-args)
 
 ## -----------------------------------------------------------------------
@@ -39,15 +39,12 @@ sterile ::
 
 ## -----------------------------------------------------------------------
 ## -----------------------------------------------------------------------
-help ::
+commands-help :: tox-help
+
+.PHONY: tox-help
+tox-help ::
 	@printf '  %-33.33s %s\n' 'tox' \
 	  'Invoke tox (python test automation)'
-	@printf '  %-33.33s %s\n' 'tox-help' \
-	  'Display extended target help (tox-*)'
-
-## -----------------------------------------------------------------------
-## -----------------------------------------------------------------------
-tox-help ::
 	@printf '  %-33.33s %s\n' 'tox-run' \
 	  'Self documenting alias for command tox'
 

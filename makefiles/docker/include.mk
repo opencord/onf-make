@@ -22,13 +22,23 @@
 
 $(if $(DEBUG),$(warning ENTER))
 
-# Per-repository
-include $(onf-mk-dir)/docker/config/$(--repo-name--).mk
-
 # ------------------- ##
 # ---]  GLOBALS  [--- ##
 # ------------------- ##
 VOLTHA_TOOLS_VERSION ?= 2.4.0
+
+# -------------------- ##
+# ---]  INCLUDES  [--- ##
+# -------------------- ##
+# include $(onf-mk-dir)/docker/help.mk
+
+# -----------------------------------------------------------------------
+# Load per-repository config: docker mount points, etc
+# -----------------------------------------------------------------------
+include $(firstword $(wildcard \
+  $(local-mk-dir)/docker/config/include.mk \
+  $(onf-mk-dir)/docker/config/$(--repo-name--).mk \
+))
 
 # ---------------------------------
 # Induce error for misconfiguration

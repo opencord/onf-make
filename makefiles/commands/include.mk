@@ -25,9 +25,14 @@ ifndef mk-include--onf-commands # guard macro, include once
 
   $(if $(DEBUG),$(warning ENTER))
   include $(onf-mk-dir)/commands/kail/include.mk
+  include $(onf-mk-dir)/commands/kubectl/include.mk
   include $(onf-mk-dir)/commands/pre-commit/include.mk
   include $(onf-mk-dir)/commands/tox/include.mk
   $(if $(DEBUG),$(warning LEAVE))
+
+help ::
+	@printf '  %-33.33s %s\n' 'commands-help' \
+	  'Display verbose help for targets makefiles/commands/*'
 
   mk-include--onf-commands := true
 

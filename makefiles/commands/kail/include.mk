@@ -22,14 +22,6 @@
 
 MAKEDIR ?= $(error MAKEDIR= is required)
 
-## -----------------------------------------------------------------------
-## -----------------------------------------------------------------------
-help::
-	@echo "  kail            Install the kail command"
-ifdef VERBOSE
-	@echo "                  make kail KAIL_PATH="
-endif
-
 # -----------------------------------------------------------------------
 # Install the 'kail' tool if needed: https://github.com/boz/kail
 #   o WORKSPACE - jenkins aware
@@ -47,5 +39,16 @@ $(kail-cmd):
 
 .PHONY: kail
 kail : $(kail-cmd)
+
+## -----------------------------------------------------------------------
+## -----------------------------------------------------------------------
+commands-help :: kail-help
+
+.PHONY: kail-help
+kail-help ::
+	@echo "  kail            Install the kail command"
+ifdef VERBOSE
+	@echo "                  make kail KAIL_PATH="
+endif
 
 # [EOF]

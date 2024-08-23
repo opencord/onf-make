@@ -29,17 +29,12 @@ pre-commit : venv
 
 ## -----------------------------------------------------------------------
 ## -----------------------------------------------------------------------
-help ::
-	@printf '  %-33.33s %s\n' 'pre-commit' \
-	  'Invoke command pre-commit'
-	@printf '  %-33.33s %s\n' 'pre-commit-help' \
-	  'Display extended target help (pre-commit-*)'
+commands-help :: pre-commit-help
 
-## -----------------------------------------------------------------------
-## -----------------------------------------------------------------------
-tox-help ::
-	@printf '  %-33.33s %s\n' 'tox-run' \
-	  'Self documenting alias for command tox'
+.PHONY: pre-commit-help
+pre-commit-help ::
+	@printf '  %-33.33s %s\n' 'pre-commit-install' \
+	  'Invoke the pre-commit hook linting tool'
 
 $(if $(DEBUG),$(warning LEAVE))
 
