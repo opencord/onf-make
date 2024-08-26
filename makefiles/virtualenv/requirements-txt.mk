@@ -44,7 +44,7 @@ $(venv-requirements) : requirements.txt
 
 	$(call banner-enter,venv-requirements)
 	@mkdir -p $(dir $@)
-	$(activate) && python -m pip install -r 'requirements.txt'
+	/bin/bash --noprofile --norc -c "$(activate) && python -m pip install -r 'requirements.txt'"
 	@touch $@
 
 	$(call banner-leave,venv-requirements)

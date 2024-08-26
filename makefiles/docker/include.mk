@@ -90,7 +90,27 @@ get-cmd-docker-protoc = $(docker-run-app) $(vee-citools)-protoc protoc
 PROTOC                ?= $(call get-cmd-docker-protoc)
 
 # -----------------------------------------------------------------------
-# Usage: PROTOC_SH := $(call get-cmd-docker-protoc-sh)
+# Intent: Construct docker command passing in mounts.
+#         To override, declare PROTOC_SH := $(call ) in Makefile
+# -----------------------------------------------------------------------
+# Usage:
+#   docker-argv-mounts += -v ${CURDIR}:$(protoc-sh-docker-mount)
+#   docker-argv-mounts += --workdir $(protoc-sh-docker-mount)
+#   PROTOC_SH := $(call get-cmd-docker-argv-protoc-sh,docker-argv-mounts)
+# -----------------------------------------------------------------------
+get-cmd-docker-argv-protoc-sh =\
+  $(strip \
+    $(foreach argv,$(1),\
+      $(docker-run-is) $(if $(argv),$($(argv))) $(vee-citools)-protoc sh -c \
+    )\
+)
+
+# -----------------------------------------------------------------------
+# Intent: Original get-cmd-docker library function.
+#   - conditional mount: use -v or --workdir
+#   - See Also: get-cmd-docker-argv-protoc-sh() for generalized mounts
+# -----------------------------------------------------------------------
+# Usage: PROTOC_SH := $(call get-cmd-docker-argv-protoc-sh)
 # -----------------------------------------------------------------------
 get-cmd-docker-protoc-sh =\
   $(strip \
@@ -103,22 +123,6 @@ get-cmd-docker-protoc-sh =\
 	  sh -c \
   )
 PROTOC_SH ?= $(call get-cmd-docker-protoc-sh)
-
-# get-docker-protoc-sh = $(strip )
-#PROTOC_SH = $(docker-run-is)
-#ifdef protc-sh-docker-mount
-#   PROTOC_SH += -v ${CURDIR}:$(protoc-sh-docker-mount)
-#   PROTOC_SH += --workdir=$(protoc-sh-docker-mount)
-#endif # protoc-sh-docker-mount
-#PROTOC_SH += $(vee-citools)-protoc sh -c
-
-# Usage: GO_JUNIT_REPORT := $(call get-docker-go-junit-repo)
-# get-docker-go-junit-repo = $(docker-run-app) $(vee-citools)-go-junit-report go-junit-report
-# GO_JUNIT_REPORT   ?= $(call get-docker-go-junit-repo)
-
-# -----------------------------------------------------------------------
-# get-docker-gocover-cobertura = $(docker-run-app)/src/github.com/opencord/voltha-openolt-adapter $(vee-citools)-gocover-cobertura gocover-cobertura
-# GOCOVER_COBERTURA ?= $(call get-docker-gocover-cobertura)
 
 ## -----------------------------------------------------------------------
 ## Coverage report: junit
