@@ -3,7 +3,7 @@ onf-make library makefiles
 
 This repository contains common makefile logic and targets that can be
 used to build arbitrary repositories.  Makefile logic is currently being
-consumed by the VOLTHA project 
+consumed by the VOLTHA project
 
 makefiles/ subdirectories
 -------------------------
@@ -32,7 +32,7 @@ Hierarchy
 ---------
 
     % tree --charset=ascii -n
-    
+
     Makefile
     config.mk
     makefiles/
@@ -52,7 +52,7 @@ Hierarchy
     |   |   |   |-- robot.mk        Syntax check robot testing framework
     |   |   |   |-- shell.mk        Invoke shellcheck command on scripts
     |   |   |   |-- yaml            Syntax check yaml configs
-  
+
 NOTES
 =====
 
@@ -70,6 +70,8 @@ SEE ALSO
 
 - [Makefile Variables & Debugging](docs/VARIABLES.md)
 - [Todo List](docs/todo.md)
+
+<!---
 
 # -----------------------------------------------------------------------
 # Copyright 2023-2024 Open Networking Foundation Contributors
@@ -91,3 +93,5 @@ SEE ALSO
 # -----------------------------------------------------------------------
 # Intent:
 # -----------------------------------------------------------------------
+
+--->
