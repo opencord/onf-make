@@ -27,6 +27,9 @@ pre-commit-requirements-txt := $(strip \
   $(call path-by-makefilepath-by-makefile,requirements.txt) \
 )
 
+pre-commit-config-yaml-src = $(dir $(onf-mk-dir)).pre-commit-config.yaml
+pre-commit-config-yaml-dst = $(dir $(venv-abs-path)).pre-commit-config.yaml
+
 ## -----------------------------------------------------------------------
 ## Intent: https://tox.wiki/en/4.6.4/installation.html
 ##   python -m pip install pipx-in-pipx --user
@@ -37,12 +40,21 @@ pre-commit-requirements-txt := $(strip \
 ##   o simple: Installed through requirements.txt
 ##   o This target can make usage on-demand.
 ## -----------------------------------------------------------------------
+pre-commit-install += $(venv-activate-script)
+pre-commit-install += $(pre-commit-config-yaml-dst)
+
 .PHONY: pre-commit-install
-pre-commit-install: $(venv-activate-script)
+pre-commit-install: $(pre-commit-install)
 
 	$(call banner-enter,Target $@)
-	$(activate) && python -m pip install -r "$(tox-requirements-txt)"
+	$(activate) && python -m pip install -r "$(pre-commit-requirements-txt)"
 	$(call banner-enter,Target $@)
+
+## -----------------------------------------------------------------------
+## Intent: Install default config when used in a new sandbox
+## -----------------------------------------------------------------------
+$(pre-commit-config-yaml-dst) :
+	rsync -v --checksum $(pre-commit-config-yaml-src) $@
 
 ## -----------------------------------------------------------------------
 ## Intent: Display version of the installed tox command.

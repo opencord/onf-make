@@ -65,7 +65,7 @@ EOM
 }
 
 ## -----------------------------------------------------------------------
-## Intent: Display an error mesage then exit with status
+## Intent: Display an error message then exit with status
 ## -----------------------------------------------------------------------
 function error()
 {

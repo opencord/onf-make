@@ -24,7 +24,7 @@ $(if $(DEBUG),$(warning ENTER))
 ## Intent: Invoke the pre-commit command
 ## -----------------------------------------------------------------------
 .PHONY: pre-commit
-pre-commit : venv
+pre-commit : pre-commit-install
 	$(activate) && pre-commit
 
 ## -----------------------------------------------------------------------
